@@ -1,0 +1,20 @@
+Options +FollowSymLinks
+RewriteEngine On
+
+<IfModule mod_headers.c>
+# Set XSS Protection header
+Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+ 
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteCond %{SCRIPT_FILENAME} !-f
+
+RewriteRule ^kasutusjuhend$ pages/instructions.php
+RewriteRule ^arhitektuur$ pages/architecture.php
+RewriteRule ^tagasiside$ pages/feedback.php
+RewriteRule ^saadetud$ pages/feedback-send.php
+
+RewriteRule ^resource/dynamic/svg-gradient_(.*)\.svg$ resource/dynamic/svg-gradient.php?group=$1
+RewriteRule ^resource/dynamic/svg-gradient-2way_(.*)\.svg$ resource/dynamic/svg-gradient-2way.php?group=$1
+
+RewriteRule ^bestikas/(.*)$ person.php?name=$1

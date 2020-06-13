@@ -1,0 +1,7 @@
+/host/*
+/auth/cosmic-kiln-255715-4a5710028d7e.json
+/auth/token.json
+/auth/credentials.json
+/cache/*
+/config/*
+/state/*

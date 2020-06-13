@@ -1,0 +1,86 @@
+.autocompleteInput * {
+  box-sizing: border-box;
+}
+
+body {
+  /* font: 16px Arial; */
+  /* font-family: 'Roboto', sans-serif; */
+  /* font-weight: 300; */
+  /* background: var(--darkTextColor); */
+  /* color: #0e0e0e; */
+  /* width: 100%; */
+  /* margin: 0; */
+  /* position: relative; */
+  /* padding: 0; */
+}
+
+/*the container must be positioned relative:*/
+.autocomplete {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.autocompleteInput input {
+  border: 1px solid transparent;
+  background-color: #f1f1f1;
+  padding: 10px;
+  font-size: 16px;
+  height: 100%;
+}
+
+.autocompleteInput input[type=text] {
+  background-color: var(--cardColor);
+  width: 100%;
+  height: 100%;
+  color: var(--textColor);
+}
+
+.autocompleteInput input[type=submit] {
+  background-color: DodgerBlue;
+  color: #fff;
+  cursor: pointer;
+}
+
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid var(--backgroundColor);
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  color: var(--darkTextColor);
+  right: 0;
+}
+
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: var(--cardColor);
+  border-bottom: 1px solid var(--backgroundColor);
+}
+
+/*when hovering an item:*/
+.autocomplete-items div:hover {
+  background-color: var(--backgroundColor);
+}
+
+/*when navigating through the items using the arrow keys:*/
+.autocomplete-active {
+  background-color: DodgerBlue !important; 
+  color: #ffffff; 
+}
+
+#screen-input form {
+    width: calc(100% - 3.2em);
+    height: 3em;
+    display: block;
+    position: relative;
+}
+
+.autocompleteInput input#input-name {
+    width: 100%;
+    box-sizing: border-box;
+}

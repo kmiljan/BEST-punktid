@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "outDir": "./js",
+    "allowJs": true,
+    "module": "es6",
+    "target": "es6",
+    "esModuleInterop": true,
+    "checkJs": false,
+    "incremental": true
+  },
+  "include": ["./ts-source/**/*"]
+} 

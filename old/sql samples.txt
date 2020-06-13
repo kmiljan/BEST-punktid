@@ -1,0 +1,185 @@
+CREATE TABLE points_frtg(
+    name VARCHAR(126),
+    activity VARCHAR(254),
+    activity_count FLOAT,
+    activity_timestamp DATE,
+    activity_comment VARCHAR(510),
+    activity_score INT(11)
+);
+CREATE TABLE points_hr_local(
+    name VARCHAR(126),
+    activity VARCHAR(254),
+    activity_count FLOAT,
+    activity_timestamp DATE,
+    activity_comment VARCHAR(510),
+    activity_score INT(11)
+);
+CREATE TABLE points_hr_teamwork(
+    name VARCHAR(126),
+    activity VARCHAR(254),
+    activity_count FLOAT,
+    activity_timestamp DATE,
+    activity_comment VARCHAR(510),
+    activity_score INT(11)
+);
+CREATE TABLE points_hr_projects(
+    name VARCHAR(126),
+    activity VARCHAR(254),
+    activity_count FLOAT,
+    activity_timestamp DATE,
+    activity_timestamp_end DATE,
+    activity_comment VARCHAR(510),
+    activity_score INT(11)
+);
+CREATE TABLE points_mtg(
+    name VARCHAR(126),
+    activity VARCHAR(254),
+    activity_count FLOAT,
+    activity_timestamp DATE,
+    activity_comment VARCHAR(510),
+    activity_score INT(11)
+);
+CREATE TABLE points_prtg(
+    name VARCHAR(126),
+    activity VARCHAR(254),
+    activity_count FLOAT,
+    activity_timestamp DATE,
+    activity_comment VARCHAR(510),
+    activity_score INT(11)
+);
+CREATE TABLE points_rv(
+    name VARCHAR(126),
+    activity VARCHAR(254),
+    activity_count FLOAT,
+    activity_timestamp DATE,
+    activity_comment VARCHAR(510),
+    activity_score INT(11)
+);
+CREATE TABLE points_ttg(
+    name VARCHAR(126),
+    activity VARCHAR(254),
+    activity_count FLOAT,
+    activity_timestamp DATE,
+    activity_comment VARCHAR(510),
+    activity_score INT(11)
+);
+
+
+
+
+
+META:
+CREATE TABLE members_with_points(
+    name VARCHAR(126),
+    status INT(11)
+);
+CREATE TABLE meta_groups(
+    groupName VARCHAR(126),
+    totalScore MEDIUMINT(9),
+    totalScoreThisMonth MEDIUMINT(9),
+    totalScoreThisYear MEDIUMINT(9),
+    totalScoreThisSeason MEDIUMINT(9),
+    totalActivities MEDIUMINT(9),
+    totalActivitiesThisMonth MEDIUMINT(9),
+    totalActivitiesThisYear MEDIUMINT(9),
+    totalActivitiesThisSeason MEDIUMINT(9)
+);
+CREATE TABLE meta_personal_global(
+    name VARCHAR(126),
+    totalScore MEDIUMINT(9),
+    totalScoreThisMonth MEDIUMINT(9),
+    totalScoreThisYear MEDIUMINT(9),
+    totalScoreThisSeason MEDIUMINT(9),
+    totalActivities MEDIUMINT(9),
+    totalActivitiesThisMonth MEDIUMINT(9),
+    totalActivitiesThisYear MEDIUMINT(9),
+    totalActivitiesThisSeason MEDIUMINT(9)
+);
+CREATE TABLE meta_personal_frtg(
+    name VARCHAR(126),
+    totalScore MEDIUMINT(9),
+    totalScoreThisMonth MEDIUMINT(9),
+    totalScoreThisYear MEDIUMINT(9),
+    totalScoreThisSeason MEDIUMINT(9),
+    totalActivities MEDIUMINT(9),
+    totalActivitiesThisMonth MEDIUMINT(9),
+    totalActivitiesThisYear MEDIUMINT(9),
+    totalActivitiesThisSeason MEDIUMINT(9)
+);
+CREATE TABLE meta_personal_hr_local(
+    name VARCHAR(126),
+    totalScore MEDIUMINT(9),
+    totalScoreThisMonth MEDIUMINT(9),
+    totalScoreThisYear MEDIUMINT(9),
+    totalScoreThisSeason MEDIUMINT(9),
+    totalActivities MEDIUMINT(9),
+    totalActivitiesThisMonth MEDIUMINT(9),
+    totalActivitiesThisYear MEDIUMINT(9),
+    totalActivitiesThisSeason MEDIUMINT(9)
+);
+CREATE TABLE meta_personal_hr_projects(
+    name VARCHAR(126),
+    totalScore MEDIUMINT(9),
+    totalScoreThisMonth MEDIUMINT(9),
+    totalScoreThisYear MEDIUMINT(9),
+    totalScoreThisSeason MEDIUMINT(9),
+    totalActivities MEDIUMINT(9),
+    totalActivitiesThisMonth MEDIUMINT(9),
+    totalActivitiesThisYear MEDIUMINT(9),
+    totalActivitiesThisSeason MEDIUMINT(9)
+);
+CREATE TABLE meta_personal_hr_teamwork(
+    name VARCHAR(126),
+    totalScore MEDIUMINT(9),
+    totalScoreThisMonth MEDIUMINT(9),
+    totalScoreThisYear MEDIUMINT(9),
+    totalScoreThisSeason MEDIUMINT(9),
+    totalActivities MEDIUMINT(9),
+    totalActivitiesThisMonth MEDIUMINT(9),
+    totalActivitiesThisYear MEDIUMINT(9),
+    totalActivitiesThisSeason MEDIUMINT(9)
+);
+CREATE TABLE meta_personal_mtg(
+    name VARCHAR(126),
+    totalScore MEDIUMINT(9),
+    totalScoreThisMonth MEDIUMINT(9),
+    totalScoreThisYear MEDIUMINT(9),
+    totalScoreThisSeason MEDIUMINT(9),
+    totalActivities MEDIUMINT(9),
+    totalActivitiesThisMonth MEDIUMINT(9),
+    totalActivitiesThisYear MEDIUMINT(9),
+    totalActivitiesThisSeason MEDIUMINT(9)
+);
+CREATE TABLE meta_personal_prtg(
+    name VARCHAR(126),
+    totalScore MEDIUMINT(9),
+    totalScoreThisMonth MEDIUMINT(9),
+    totalScoreThisYear MEDIUMINT(9),
+    totalScoreThisSeason MEDIUMINT(9),
+    totalActivities MEDIUMINT(9),
+    totalActivitiesThisMonth MEDIUMINT(9),
+    totalActivitiesThisYear MEDIUMINT(9),
+    totalActivitiesThisSeason MEDIUMINT(9)
+);
+CREATE TABLE meta_personal_rv(
+    name VARCHAR(126),
+    totalScore MEDIUMINT(9),
+    totalScoreThisMonth MEDIUMINT(9),
+    totalScoreThisYear MEDIUMINT(9),
+    totalScoreThisSeason MEDIUMINT(9),
+    totalActivities MEDIUMINT(9),
+    totalActivitiesThisMonth MEDIUMINT(9),
+    totalActivitiesThisYear MEDIUMINT(9),
+    totalActivitiesThisSeason MEDIUMINT(9)
+);
+CREATE TABLE meta_personal_ttg(
+    name VARCHAR(126),
+    totalScore MEDIUMINT(9),
+    totalScoreThisMonth MEDIUMINT(9),
+    totalScoreThisYear MEDIUMINT(9),
+    totalScoreThisSeason MEDIUMINT(9),
+    totalActivities MEDIUMINT(9),
+    totalActivitiesThisMonth MEDIUMINT(9),
+    totalActivitiesThisYear MEDIUMINT(9),
+    totalActivitiesThisSeason MEDIUMINT(9)
+)
