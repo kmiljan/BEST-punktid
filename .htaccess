@@ -5,7 +5,7 @@ RewriteEngine On
 # Set XSS Protection header
 Header set X-XSS-Protection "1; mode=block"
 </IfModule>
- 
+
 RewriteCond %{SCRIPT_FILENAME} !-d
 RewriteCond %{SCRIPT_FILENAME} !-f
 
