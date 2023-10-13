@@ -17,7 +17,6 @@ export default class DataAPI {
                         resolve(data);
                     }
                     catch(e){
-                        debugger
                         notify("Request to URL: "+URL+" came back with \n"+str, "request");
                         reject(e);
                     }
@@ -37,7 +36,7 @@ export default class DataAPI {
     groups():Promise<object> {
         return this.requestMethod(`/get_data.php?type=groups`);
     };
-    names():Promise<object> {
+    names():Promise<string[]> {
         return this.requestMethod(`/cache/namelist.json`).then(arr=>{
             for(let i=0; i<arr.length; i++) {
                 arr[i]=decodeURIComponent(arr[i]);

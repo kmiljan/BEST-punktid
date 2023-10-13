@@ -89,7 +89,7 @@ export default class Displays {
             ;
             navigateToPersonalPage() {
                 const name = document.getElementById("nameInput_content_input").value;
-                window.location.href = '/bestikas/' + encodeURIComponent(name);
+                window.location.href = '/bestikas/' + encodeURIComponent(name).replace(/%20/g, '+');
             }
             create() {
                 this.renderables = {

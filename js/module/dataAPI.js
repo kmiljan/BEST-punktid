@@ -15,7 +15,6 @@ export default class DataAPI {
                     resolve(data);
                 }
                 catch (e) {
-                    debugger;
                     notify("Request to URL: " + URL + " came back with \n" + str, "request");
                     reject(e);
                 }
