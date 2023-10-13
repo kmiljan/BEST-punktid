@@ -15,6 +15,7 @@ function SQL_new_session() {
     }
     catch(Exception $err){
         logError("SQL(".__FILE__.", Session estabilishment and configuration):\n" .$err->getMessage());
+        exit(1);
     }
     return $conn;
     

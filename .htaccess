@@ -18,3 +18,5 @@ RewriteRule ^resource/dynamic/svg-gradient_(.*)\.svg$ resource/dynamic/svg-gradi
 RewriteRule ^resource/dynamic/svg-gradient-2way_(.*)\.svg$ resource/dynamic/svg-gradient-2way.php?group=$1
 
 RewriteRule ^bestikas/(.*)$ person.php?name=$1
+
+RewriteRule ^api/otsiBestikas endpoints/searchByName.php

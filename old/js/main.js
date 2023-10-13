@@ -160,6 +160,15 @@ var screens={
             //Set up autocomplete
             render.autocompleteInput.fill(onScreenElementWrappers[0]);
             getNameList().then(function(response) {
+                new autocomplete({
+                    selector: "#input-name",
+                    data: {
+                        src: (query) => {
+
+                        },
+                        cache: false
+                    }
+                })
                 autocomplete(document.getElementById("input-name"), response);
             });
 

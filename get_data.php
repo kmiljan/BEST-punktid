@@ -1,6 +1,8 @@
 <?php
 require_once('util/global.php');
 $type=strtolower($_GET["type"]);
+//TODO
+// Refactor this. Create one file per request. For example like endpoints/searchByName.php
 switch($type) {
     case 'personaldata':
         $person_name=$_GET["person_name"];
