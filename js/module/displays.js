@@ -82,14 +82,12 @@ export default class Displays {
             }
             ;
             data() {
-                return this.fetcherInstance.names().then(data => {
-                    this.content.list = data;
-                });
+                return new Promise((resolve, reject) => resolve());
             }
             ;
             navigateToPersonalPage() {
                 const name = document.getElementById("nameInput_content_input").value;
-                window.location.href = '/bestikas/' + encodeURIComponent(name).replace(/%20/g, '+');
+                window.location.href = '/bestikas/' + encodeURIComponent(name.trim()).replace(/%20/g, '+');
             }
             create() {
                 this.renderables = {

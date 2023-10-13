@@ -1,81 +1,92 @@
-export default function autocomplete(inp, arr, submitAction, changeButtonState, renderableInstance) {
+export default function autocomplete(inp, submitAction, changeButtonState, renderableInstance) {
     /*the autocomplete function takes two arguments,
     the text field element and an array of possible autocompleted values:*/
     var currentFocus;
     /*execute a function when someone writes in the text field:*/
+    let lastSearchTimeoutId = 0;
     inp.addEventListener("input", function (e) {
-        var a, b, i, val = this.value;
-        /*close any already open lists of autocompleted values*/
-        closeAllLists();
-        if (!val) {
-            return false;
-        }
-        currentFocus = -1;
-        /*create a DIV element that will contain the items (values):*/
-        a = document.createElement("DIV");
-        a.setAttribute("id", this.id + "autocomplete-list");
-        a.setAttribute("class", "autocomplete-items");
-        /*append the DIV element as a child of the autocomplete container:*/
-        this.parentNode.appendChild(a);
-        /*for each item in the array...*/
-        for (i = 0; i < arr.length; i++) {
-            /*check if the item starts with the same letters as the text field value:*/
-            if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-                /*create a DIV element for each matching element:*/
-                b = document.createElement("DIV");
-                /*make the matching letters bold:*/
-                b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-                b.innerHTML += arr[i].substr(val.length);
-                /*insert a input field that will hold the current array item's value:*/
-                b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-                /*execute a function when someone clicks on the item value (DIV element):*/
-                b.addEventListener("click", function (e) {
-                    /*insert the value for the autocomplete text field:*/
-                    inp.value = this.getElementsByTagName("input")[0].value;
-                    let exactMatchFlag = false;
-                    for (i = 0; i < arr.length; i++) {
-                        if (arr[i].toUpperCase() == inp.value.toUpperCase()) {
-                            exactMatchFlag = true;
-                        }
-                    }
-                    if (inp.value.length < 1) {
-                        exactMatchFlag = false;
-                    }
-                    if (exactMatchFlag) {
-                        changeButtonState(true, renderableInstance);
-                    }
-                    else {
-                        changeButtonState(false, renderableInstance);
-                    }
-                    /*close the list of autocompleted values,
-                    (or any other open lists of autocompleted values:*/
-                    closeAllLists();
-                });
-                a.appendChild(b);
+        //lets not start search if we are actively typing
+        clearTimeout(lastSearchTimeoutId);
+        const thisWrapper = this;
+        lastSearchTimeoutId = setTimeout(function () {
+            console.log('running ' + lastSearchTimeoutId);
+            /*close any already open lists of autocompleted values*/
+            closeAllLists();
+            var a, b, i, val = thisWrapper.value;
+            if (!val || val.length < 4) {
+                return false;
             }
-        }
-        /*let exactMatchFlag=false;
-        for (i = 0; i < arr.length; i++) {
-          if(arr[i].toUpperCase()==val.toUpperCase()) {
-            exactMatchFlag=true;
-          }
-          
-        }*/
-        let exactMatchFlag = false;
-        for (i = 0; i < arr.length; i++) {
-            if (arr[i].toUpperCase() == inp.value.toUpperCase()) {
-                exactMatchFlag = true;
-            }
-        }
-        if (val.length < 1) {
-            exactMatchFlag = false;
-        }
-        if (exactMatchFlag) {
-            changeButtonState(true, renderableInstance);
-        }
-        else {
-            changeButtonState(false, renderableInstance);
-        }
+            fetch(window.location.origin + '/api/otsiBestikas?query=' + val)
+                .then(source => source.json())
+                .then(arr => {
+                currentFocus = -1;
+                /*create a DIV element that will contain the items (values):*/
+                a = document.createElement("DIV");
+                a.setAttribute("id", thisWrapper.id + "autocomplete-list");
+                a.setAttribute("class", "autocomplete-items");
+                /*append the DIV element as a child of the autocomplete container:*/
+                thisWrapper.parentNode.appendChild(a);
+                /*for each item in the array...*/
+                for (i = 0; i < arr.length; i++) {
+                    /*check if the item starts with the same letters as the text field value:*/
+                    if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                        /*create a DIV element for each matching element:*/
+                        b = document.createElement("DIV");
+                        /*make the matching letters bold:*/
+                        b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                        b.innerHTML += arr[i].substr(val.length);
+                        /*insert a input field that will hold the current array item's value:*/
+                        b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                        /*execute a function when someone clicks on the item value (DIV element):*/
+                        b.addEventListener("click", function (e) {
+                            /*insert the value for the autocomplete text field:*/
+                            inp.value = this.getElementsByTagName("input")[0].value;
+                            let exactMatchFlag = false;
+                            for (i = 0; i < arr.length; i++) {
+                                if (arr[i].toUpperCase() == inp.value.toUpperCase()) {
+                                    exactMatchFlag = true;
+                                }
+                            }
+                            if (inp.value.length < 1) {
+                                exactMatchFlag = false;
+                            }
+                            if (exactMatchFlag) {
+                                changeButtonState(true, renderableInstance);
+                            }
+                            else {
+                                changeButtonState(false, renderableInstance);
+                            }
+                            /*close the list of autocompleted values,
+                            (or any other open lists of autocompleted values:*/
+                            closeAllLists();
+                        });
+                        a.appendChild(b);
+                    }
+                }
+                /*let exactMatchFlag=false;
+                for (i = 0; i < arr.length; i++) {
+                  if(arr[i].toUpperCase()==val.toUpperCase()) {
+                    exactMatchFlag=true;
+                  }
+
+                }*/
+                let exactMatchFlag = false;
+                for (i = 0; i < arr.length; i++) {
+                    if (arr[i].toUpperCase() == inp.value.toUpperCase()) {
+                        exactMatchFlag = true;
+                    }
+                }
+                if (val.length < 1) {
+                    exactMatchFlag = false;
+                }
+                if (exactMatchFlag) {
+                    changeButtonState(true, renderableInstance);
+                }
+                else {
+                    changeButtonState(false, renderableInstance);
+                }
+            });
+        }, 500);
     });
     /*execute a function presses a key on the keyboard:*/
     inp.addEventListener("keydown", function (e) {

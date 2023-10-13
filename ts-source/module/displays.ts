@@ -110,9 +110,7 @@ export default class Displays {
                 this.id="nameInput";
             };
             data():Promise<void>{
-                return this.fetcherInstance.names().then(data=>{
-                    this.content.list=data;
-                });
+                return new Promise((resolve, reject) => resolve());
             };
             navigateToPersonalPage(){
                 const name:string=document.getElementById("nameInput_content_input").value;

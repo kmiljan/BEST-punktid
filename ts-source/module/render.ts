@@ -358,7 +358,7 @@ export default class Renderables {
                     `;
                     this.elementNode=this.toDOMElement(HTMLString)
                     this.toDOM(this.elementNode);
-                    autocomplete(this.elementNode.querySelector('#'+this.id+"_input"), this.content.list, this.content.submitAction, this.changeSubmitState, this);
+                    autocomplete(this.elementNode.querySelector('#'+this.id+"_input"), this.content.submitAction, this.changeSubmitState, this);
                     this.render();
                 }
             },
