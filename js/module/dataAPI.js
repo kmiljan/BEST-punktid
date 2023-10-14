@@ -81,7 +81,6 @@ export default class DataAPI {
         const exemptBasedOnStatusString = encodeURI(String(exemptBasedOnStatus));
         return this.requestMethod(`/get_data.php?type=podium&group=${group}&referencedata=${referenceData}&podiumsize=${podiumSizeString}&exemptBasedOnStatus=${exemptBasedOnStatusString}`);
     }
-    ;
     allPodium(podiumSize, from) {
         let url = `api/podium/all?podiumsize=${podiumSize}`;
         if (from !== null) {
@@ -103,24 +102,9 @@ export default class DataAPI {
         }
         return this.getRequest(url);
     }
-    ;
-    exempt(name) {
-        name = encodeURI(name);
-        return this.requestMethod(`/get_data.php?type=exempt&person_name=${name}`);
+    lastActivities(name, amount) {
+        return this.getRequest(`/api/lastActivities?personName=${encodeURI(name)}&count=${amount}`);
     }
-    ;
-    lastActivities(name, group, amount) {
-        group = encodeURI(group);
-        const amountString = encodeURI(String(amount));
-        if (name) {
-            name = encodeURI(name);
-            return this.requestMethod(`/get_data.php?type=lastactivities&person_name=${name}&group=${group}&amount=${amountString}`);
-        }
-        else {
-            return this.requestMethod(`/get_data.php?type=lastactivities&group=${group}&amount=${amountString}`);
-        }
-    }
-    ;
     svg(URL) {
         return this.requestMethodText(`/resource/${URL}`);
     }

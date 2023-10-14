@@ -433,7 +433,7 @@ export default class Displays {
             }
             ;
             data() {
-                return this.fetcherInstance.lastActivities(this.name, 'all', 5).then(data => {
+                return this.fetcherInstance.lastActivities(this.name, 5).then(data => {
                     this.rawContent = data;
                     this.content.list = [];
                     if (this.rawContent.length == 0) {

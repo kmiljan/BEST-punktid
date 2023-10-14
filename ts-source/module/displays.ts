@@ -82,17 +82,17 @@ export default class Displays {
                         this.content.data.bottom="";
                         this.content.data.bottomNotice="";
                     }
-                    
+
                     this.create(["gradient2"]);
                 });
             }
         };
         this.NameInput= class {
-    
+
             rendererInstance:Renderables;
             fetcherInstance:DataAPI;
             displayInstance:Displays;
-    
+
             content:{
                 list: Array<string>
             }
@@ -101,7 +101,7 @@ export default class Displays {
             parentNode:HTMLElement;
 
             fetcher;
-            renderables; 
+            renderables;
             constructor(rendererInstance:Renderables, fetcherInstance:DataAPI, displayInstance:Displays, parentNode:HTMLElement){
                 this.rendererInstance=rendererInstance;
                 this.fetcherInstance=fetcherInstance;
@@ -125,15 +125,15 @@ export default class Displays {
 
                 //Create element
                 this.renderables.element=new this.rendererInstance.elements.AutocompleteInput(
-                    this.rendererInstance, 
-                    this.id+"_content",  
-                    this.renderables.frame.frameNode, 
+                    this.rendererInstance,
+                    this.id+"_content",
+                    this.renderables.frame.frameNode,
                     []
                 );
                 this.renderables.element.data(this.content.list, this.navigateToPersonalPage);
                 this.renderables.element.create();
-    
-    
+
+
             }
             run(){
                 return this.data().then(()=>{
@@ -180,11 +180,11 @@ export default class Displays {
             name:string;
             group:string;
             groupObject:object;
-    
+
             rendererInstance:Renderables;
             fetcherInstance:DataAPI;
             displayInstance:Displays;
-    
+
             rawContent:object;
             content:object;
             id:string;
@@ -193,7 +193,7 @@ export default class Displays {
             renderIfDataIsEmpty:boolean;
             dataIsEmpty:boolean;
             fetcher;
-            renderables; 
+            renderables;
             constructor(rendererInstance:Renderables, fetcherInstance:DataAPI, displayInstance:Displays, name:string, group:string, renderIfDataIsEmpty:boolean, parentNode:HTMLElement){
                 this.rendererInstance=rendererInstance;
                 this.fetcherInstance=fetcherInstance;
@@ -210,7 +210,7 @@ export default class Displays {
             data():Promise<void>{
                 return this.fetcherInstance.personalData(this.name).then(data=>{
                     this.rawContent=data;
-                    
+
                     this.content.list=[];
                     if (this.rawContent[this.group].breakdown.length==0){
                         this.dataIsEmpty=true;
@@ -231,48 +231,48 @@ export default class Displays {
                     frame: new this.rendererInstance.frames.DashboardElementFrame(this.rendererInstance, this.id+"_f",  this.parentNode, [])
                 };
                 this.renderables.frame.create();
-    
-    
+
+
                 //Create title
                 this.renderables.header=new this.rendererInstance.elements.ElementTitle(
-                    this.rendererInstance, 
-                    this.id+"_title",  
-                    this.renderables.frame.frameNode, 
+                    this.rendererInstance,
+                    this.id+"_title",
+                    this.renderables.frame.frameNode,
                     []
                 );
                 this.renderables.header.data(this.groupObject.properties.name, "Töögrupi ülevaade");
                 this.renderables.header.create();
-    
+
                 //Create total
                 this.renderables.total=new this.rendererInstance.elements.Value(
-                    this.rendererInstance, 
-                    this.id+"_total",  
-                    this.renderables.frame.frameNode, 
+                    this.rendererInstance,
+                    this.id+"_total",
+                    this.renderables.frame.frameNode,
                     ["colored-text_"+this.groupObject.identifier]
                 );
                 this.renderables.total.data(this.content.totalScore);
                 this.renderables.total.create();
-    
+
                 //Create stripe
                 this.renderables.stripe=new this.rendererInstance.elements.Stripe(
-                    this.rendererInstance, 
-                    this.id+"_stripe",  
-                    this.renderables.frame.frameNode, 
+                    this.rendererInstance,
+                    this.id+"_stripe",
+                    this.renderables.frame.frameNode,
                     ["gradient_"+this.groupObject.identifier]
                 );
                 this.renderables.stripe.create();
-    
+
                 //Create element
                 this.renderables.element=new this.rendererInstance.elements.ActivityList(
-                    this.rendererInstance, 
-                    this.id+"_content",  
-                    this.renderables.frame.frameNode, 
+                    this.rendererInstance,
+                    this.id+"_content",
+                    this.renderables.frame.frameNode,
                     []
                 );
                 this.renderables.element.data(this.content.list);
                 this.renderables.element.create();
-    
-    
+
+
             }
             run(){
                 return this.data().then(()=>{
@@ -285,12 +285,12 @@ export default class Displays {
                 });
             }
         };
-        
+
         this.GroupPeriodLeaders= class {
             rendererInstance:Renderables;
             fetcherInstance:DataAPI;
             displayInstance:Displays;
-    
+
             rawContent:object;
             content:object;
             id:string;
@@ -299,7 +299,7 @@ export default class Displays {
             renderIfDataIsEmpty:boolean;
             dataIsEmpty:boolean;
             fetcher;
-            renderables; 
+            renderables;
 
             title:string;
             subtitle:string;
@@ -311,7 +311,7 @@ export default class Displays {
                 this.fetcherInstance=fetcherInstance;
                 this.displayInstance=displayInstance;
                 this.parentNode=parentNode;
-                
+
                 this.content={};
                 this.renderIfDataIsEmpty=renderIfDataIsEmpty;
                 this.dataIsEmpty=true;
@@ -363,18 +363,18 @@ export default class Displays {
                     frame: new this.rendererInstance.frames.DashboardElementFrame(this.rendererInstance, this.id+"_f",  this.parentNode, this.frameClasses)
                 };
                 this.renderables.frame.create();
-    
-    
+
+
                 //Create title
                 this.renderables.header=new this.rendererInstance.elements.ElementTitle(
-                    this.rendererInstance, 
-                    this.id+"_title",  
-                    this.renderables.frame.frameNode, 
+                    this.rendererInstance,
+                    this.id+"_title",
+                    this.renderables.frame.frameNode,
                     []
                 );
                 this.renderables.header.data(this.title, this.subtitle);
                 this.renderables.header.create();
-    
+
                 /*//Create total
                 this.renderables.total=new this.rendererInstance.elements.Value(
                     this.rendererInstance, 
@@ -384,7 +384,7 @@ export default class Displays {
                 );
                 this.renderables.total.data(this.content.totalScore);
                 this.renderables.total.create();*/
-    
+
                 /*//Create stripe
                 this.renderables.stripe=new this.rendererInstance.elements.Stripe(
                     this.rendererInstance, 
@@ -393,18 +393,18 @@ export default class Displays {
                     ["gradient_"+this.groupObject.identifier]
                 );
                 this.renderables.stripe.create();*/
-    
+
                 //Create element
                 this.renderables.element=new this.rendererInstance.elements.GroupLeaderList(
-                    this.rendererInstance, 
-                    this.id+"_content",  
-                    this.renderables.frame.frameNode, 
+                    this.rendererInstance,
+                    this.id+"_content",
+                    this.renderables.frame.frameNode,
                     []
                 );
                 this.renderables.element.data(this.content.list);
                 this.renderables.element.create();
-    
-    
+
+
             }
             run(){
                 return this.data().then(()=>{
@@ -433,7 +433,7 @@ export default class Displays {
             rendererInstance:Renderables;
             fetcherInstance:DataAPI;
             displayInstance:Displays;
-    
+
             rawContent:object;
             content:object;
             id:string;
@@ -442,7 +442,7 @@ export default class Displays {
             renderIfDataIsEmpty:boolean;
             dataIsEmpty:boolean;
             fetcher;
-            renderables; 
+            renderables;
 
             title:string;
             subtitle:string;
@@ -454,7 +454,7 @@ export default class Displays {
                 this.fetcherInstance=fetcherInstance;
                 this.displayInstance=displayInstance;
                 this.parentNode=parentNode;
-                
+
                 this.content={};
                 this.renderIfDataIsEmpty=renderIfDataIsEmpty;
                 this.dataIsEmpty=false;
@@ -488,7 +488,7 @@ export default class Displays {
                         let colors=[];
                         for (let j=0; j<this.displayInstance.groups.length; j++) {
                             series[j]={
-                                name: this.displayInstance.groups[j].properties.name, 
+                                name: this.displayInstance.groups[j].properties.name,
                                 data: []
                             };
                             colors.push(this.displayInstance.groups[j].properties.colors[1]);
@@ -524,18 +524,18 @@ export default class Displays {
                     frame: new this.rendererInstance.frames.DashboardElementFrame(this.rendererInstance, this.id+"_f",  this.parentNode, this.frameClasses)
                 };
                 this.renderables.frame.create();
-    
-    
+
+
                 //Create title
                 this.renderables.header=new this.rendererInstance.elements.ElementTitle(
-                    this.rendererInstance, 
-                    this.id+"_title",  
-                    this.renderables.frame.frameNode, 
+                    this.rendererInstance,
+                    this.id+"_title",
+                    this.renderables.frame.frameNode,
                     []
                 );
                 this.renderables.header.data(this.title, this.subtitle);
                 this.renderables.header.create();
-    
+
                 /*//Create total
                 this.renderables.total=new this.rendererInstance.elements.Value(
                     this.rendererInstance, 
@@ -545,7 +545,7 @@ export default class Displays {
                 );
                 this.renderables.total.data(this.content.totalScore);
                 this.renderables.total.create();*/
-    
+
                 /*//Create stripe
                 this.renderables.stripe=new this.rendererInstance.elements.Stripe(
                     this.rendererInstance, 
@@ -554,18 +554,18 @@ export default class Displays {
                     ["gradient_"+this.groupObject.identifier]
                 );
                 this.renderables.stripe.create();*/
-    
+
                 //Create element
                 this.renderables.element=new this.rendererInstance.elements.StackedBarChart(
-                    this.rendererInstance, 
-                    this.id+"_content",  
-                    this.renderables.frame.frameNode, 
+                    this.rendererInstance,
+                    this.id+"_content",
+                    this.renderables.frame.frameNode,
                     []
                 );
                 this.renderables.element.data(this.content);
                 this.renderables.element.create();
-    
-    
+
+
             }
             run(){
                 return this.data().then(()=>{
@@ -592,11 +592,11 @@ export default class Displays {
         };
         this.personalLastActivities= class {
             name:string;
-    
+
             rendererInstance:Renderables;
             fetcherInstance:DataAPI;
             displayInstance:Displays;
-    
+
             rawContent:object;
             content:object;
             id:string;
@@ -605,7 +605,7 @@ export default class Displays {
             renderIfDataIsEmpty:boolean;
             dataIsEmpty:boolean;
             fetcher;
-            renderables; 
+            renderables;
             constructor(rendererInstance:Renderables, fetcherInstance:DataAPI, displayInstance:Displays, name:string, renderIfDataIsEmpty:boolean, parentNode:HTMLElement){
                 this.rendererInstance=rendererInstance;
                 this.fetcherInstance=fetcherInstance;
@@ -618,14 +618,14 @@ export default class Displays {
                 this.dataIsEmpty=false;
             };
             data():Promise<void>{
-                return this.fetcherInstance.lastActivities(this.name, 'all', 5).then(data=>{
-                    this.rawContent=data;
-                    
-                    this.content.list=[];
-                    if (this.rawContent.length==0){
-                        this.dataIsEmpty=true;
+                return this.fetcherInstance.lastActivities(this.name, 5).then(data => {
+                    this.rawContent = data;
+
+                    this.content.list = [];
+                    if (this.rawContent.length == 0) {
+                        this.dataIsEmpty = true;
                     }
-                    this.rawContent.forEach(activity=>{
+                    this.rawContent.forEach(activity => {
                         this.content.list.push({
                             activity: activity.name,
                             repeats: round(activity.count),
@@ -633,44 +633,44 @@ export default class Displays {
                         });
                     });
                 });
-            };
+            }
             create(){
                 this.renderables={
                     frame: new this.rendererInstance.frames.DashboardElementFrame(this.rendererInstance, this.id+"_f",  this.parentNode, [])
                 };
                 this.renderables.frame.create();
-    
-    
+
+
                 //Create title
                 this.renderables.header=new this.rendererInstance.elements.ElementTitle(
-                    this.rendererInstance, 
-                    this.id+"_title",  
-                    this.renderables.frame.frameNode, 
+                    this.rendererInstance,
+                    this.id+"_title",
+                    this.renderables.frame.frameNode,
                     []
                 );
                 this.renderables.header.data("Viimased tegevused", "mille eest oled saanud punkte");
                 this.renderables.header.create();
-    
+
                 //Create stripe
                 this.renderables.stripe=new this.rendererInstance.elements.Stripe(
-                    this.rendererInstance, 
-                    this.id+"_stripe",  
-                    this.renderables.frame.frameNode, 
+                    this.rendererInstance,
+                    this.id+"_stripe",
+                    this.renderables.frame.frameNode,
                     ["gradient_default"]
                 );
                 this.renderables.stripe.create();
-    
+
                 //Create element
                 this.renderables.element=new this.rendererInstance.elements.ActivityList(
-                    this.rendererInstance, 
-                    this.id+"_content",  
-                    this.renderables.frame.frameNode, 
+                    this.rendererInstance,
+                    this.id+"_content",
+                    this.renderables.frame.frameNode,
                     []
                 );
                 this.renderables.element.data(this.content.list);
                 this.renderables.element.create();
-    
-    
+
+
             }
             run(){
                 return this.data().then(()=>{
@@ -686,23 +686,23 @@ export default class Displays {
         this.personalGroupContributions= class {
             name:string;
             groupObject:object;
-    
+
             rendererInstance:Renderables;
             fetcherInstance:DataAPI;
             displayInstance:Displays;
-    
+
             rawContent:object;
             content:object;
             id:string;
             legend: Array<object>;
-    
+
             parentNode:HTMLElement;
             renderIfDataIsEmpty:boolean;
             dataIsEmpty:boolean;
-    
+
             fetcher;
-            renderables; 
-    
+            renderables;
+
             constructor(rendererInstance:Renderables, fetcherInstance:DataAPI, displayInstance:Displays, name:string, renderIfDataIsEmpty:boolean, parentNode:HTMLElement){
                 this.rendererInstance=rendererInstance;
                 this.fetcherInstance=fetcherInstance;
@@ -718,7 +718,7 @@ export default class Displays {
                 return this.fetcherInstance.personalMetadata(this.name).then(data=>{
                     this.rawContent=data;
                     this.legend=[];
-    
+
                     //[totalScore totalScore]
                     //[Group Group]
                     let series:Array<number>=[];
@@ -732,7 +732,7 @@ export default class Displays {
                         if (score>0) {
                             this.legend.push(
                                 {
-                                    title: this.displayInstance.groups[group].properties.name, 
+                                    title: this.displayInstance.groups[group].properties.name,
                                     colorClass: "gradient_"+this.displayInstance.groups[group].identifier
                                 }
                             )
@@ -742,10 +742,10 @@ export default class Displays {
                         gradients.push(this.displayInstance.groups[group].properties.gradientFile);
                         /*colors.a.push(this.displayInstance.groups[group].properties.colors[0]);
                         colors.b.push(this.displayInstance.groups[group].properties.colors[1]);*/
-    
+
                     }
                     this.content={series: series, labels: labels, gradients:gradients};
-    
+
                 });
             };
             create(){
@@ -753,18 +753,18 @@ export default class Displays {
                     frame: new this.rendererInstance.frames.DashboardElementFrame(this.rendererInstance, this.id+"_f",  this.parentNode, [])
                 };
                 this.renderables.frame.create();
-    
-    
+
+
                 //Create title
                 this.renderables.header=new this.rendererInstance.elements.ElementTitle(
-                    this.rendererInstance, 
-                    this.id+"_title",  
-                    this.renderables.frame.frameNode, 
+                    this.rendererInstance,
+                    this.id+"_title",
+                    this.renderables.frame.frameNode,
                     []
                 );
                 this.renderables.header.data("Töögrupid", "Sinu punktide jaotumine");
                 this.renderables.header.create();
-    
+
                 /*//Create total
                 this.renderables.total=new this.rendererInstance.elements.Value(
                     this.rendererInstance, 
@@ -774,7 +774,7 @@ export default class Displays {
                 );
                 this.renderables.total.data(this.content.totalScore);
                 this.renderables.total.create();*/
-    
+
                 /*//Create stripe
                 this.renderables.stripe=new this.rendererInstance.elements.Stripe(
                     this.rendererInstance, 
@@ -784,18 +784,18 @@ export default class Displays {
                 );
                 this.renderables.stripe.data(this.groupObject.properties.colors);
                 this.renderables.stripe.create();*/
-    
+
                 //Create element
                 this.renderables.element=new this.rendererInstance.elements.PieChart(
-                    this.rendererInstance, 
-                    this.id+"_content",  
-                    this.renderables.frame.frameNode, 
+                    this.rendererInstance,
+                    this.id+"_content",
+                    this.renderables.frame.frameNode,
                     []
                 );
                 this.renderables.element.data(this.content);
                 this.renderables.element.create();
-    
-    
+
+
                 this.renderables.legend = new this.rendererInstance.elements.ChartLegend(
                     this.rendererInstance,
                     this.id + "_l",
@@ -820,25 +820,25 @@ export default class Displays {
             name:string;
             group:string;
             groupObject:object;
-    
+
             rendererInstance:Renderables;
             fetcherInstance:DataAPI;
             displayInstance:Displays;
-    
+
             rawContent: ActivityReportItem[];
             content:object;
             id:string;
-    
+
             parentNode:HTMLElement;
             renderIfDataIsEmpty:boolean;
             dataIsEmpty:boolean;
-    
+
             fetcher;
             renderables;
-    
+
             title:string;
             subtitle:string;
-    
+
             constructor(rendererInstance:Renderables, fetcherInstance:DataAPI, displayInstance:Displays, name:string, group:string, renderIfDataIsEmpty:boolean, parentNode:HTMLElement){
                 this.rendererInstance=rendererInstance;
                 this.fetcherInstance=fetcherInstance;
@@ -905,31 +905,31 @@ export default class Displays {
                     frame: new this.rendererInstance.frames.DashboardElementFrame(this.rendererInstance, this.id+"_f",  this.parentNode, [])
                 };
                 this.renderables.frame.create();
-    
-    
+
+
                 //Create title
                 this.renderables.header=new this.rendererInstance.elements.ElementTitle(
-                    this.rendererInstance, 
-                    this.id+"_title",  
-                    this.renderables.frame.frameNode, 
+                    this.rendererInstance,
+                    this.id+"_title",
+                    this.renderables.frame.frameNode,
                     []
                 );
                 this.renderables.header.data(this.title, this.subtitle);
                 this.renderables.header.create();
-    
+
                 //Create element
                 this.renderables.element=new this.rendererInstance.elements.AreaChart(
-                    this.rendererInstance, 
-                    this.id+"_content",  
-                    this.renderables.frame.frameNode, 
+                    this.rendererInstance,
+                    this.id+"_content",
+                    this.renderables.frame.frameNode,
                     []
                 );
                 this.renderables.element.data(this.content);
                 this.renderables.element.create();
-    
+
                 this.displayInstance.styleContainer.add({name: "cl_points", styles: "background: #c2475e"});
                 this.displayInstance.styleContainer.add({name: "cl_activities", styles: "background: #108cfd"});
-    
+
                 this.renderables.legend = new this.rendererInstance.elements.ChartLegend(
                     this.rendererInstance,
                     this.id + "_l",
@@ -964,19 +964,19 @@ export default class Displays {
         };
         this.Splash= class {
             name:string;
-    
+
             rendererInstance:Renderables;
             fetcherInstance:DataAPI;
             displayInstance:Displays;
-    
+
             rawContent:object;
             content:object;
             id:string;
             classes:Array<string>;
             parentNode:HTMLElement;
-    
+
             fetcher;
-            renderables; 
+            renderables;
             constructor(rendererInstance:Renderables, fetcherInstance:DataAPI, displayInstance:Displays, name:string, parentNode:HTMLElement){
                 this.rendererInstance=rendererInstance;
                 this.fetcherInstance=fetcherInstance;
@@ -1035,7 +1035,7 @@ export default class Displays {
                 this.renderables.element.data(this.name, this.content.status, this.content.placement, this.content.icon);
                 this.renderables.element.create();
             }
-            
+
             run(){
                 return this.data().then(()=>{
                     this.create();
@@ -1063,11 +1063,11 @@ export default class Displays {
                                 return colorString+=(color+" ,");
                             },
                             ""
-                        ).slice(0, -1); 
+                        ).slice(0, -1);
 
                         this.styleContainer.add(
                             {
-                                name: "gradient_"+groupElement.identifier, 
+                                name: "gradient_"+groupElement.identifier,
                                 styles:
                                 `
                                 background: linear-gradient(to right, ${colorString});
@@ -1078,7 +1078,7 @@ export default class Displays {
                         //colored-text_<x>:Colored text
                         this.styleContainer.add(
                             {
-                                name: "colored-text_"+groupElement.identifier, 
+                                name: "colored-text_"+groupElement.identifier,
                                 styles:
                                 `
                                 color:${groupElement.properties.colors[0]};
@@ -1089,7 +1089,7 @@ export default class Displays {
 
                         this.styleContainer.add(
                             {
-                                name: "color-vars_"+groupElement.identifier, 
+                                name: "color-vars_"+groupElement.identifier,
                                 styles:
                                 `
                                 --gradientRight:linear-gradient(to right, ${colorString});
@@ -1103,7 +1103,7 @@ export default class Displays {
                 );
             }
         );
-        
+
     };
     getGroupObject(identifier:string) {
         let selectedGroup;
@@ -1119,7 +1119,7 @@ export default class Displays {
         };
         return selectedGroup;
     };
-    
+
 }
 class personalPoints {
     rendererInstance:Renderables;
@@ -1131,7 +1131,7 @@ class personalPoints {
     classes:Array<string>;
     parentNode:HTMLElement;
     fetcher;
-    renderables; 
+    renderables;
     constructor(rendererInstance:Renderables, fetcherInstance:DataAPI, displayInstance:Displays, id:string, parentNode:HTMLElement){
         this.rendererInstance=rendererInstance;
         this.fetcherInstance=fetcherInstance;
@@ -1152,9 +1152,9 @@ class personalPoints {
         //Create element
         this.renderables.element=new this.rendererInstance.elements.LargeValue(this.rendererInstance, this.id,  this.renderables.frame.frameNode, classes);
         this.renderables.element.data(
-            this.content.data.top, 
-            this.content.data.center, 
-            this.content.data.bottom, 
+            this.content.data.top,
+            this.content.data.center,
+            this.content.data.bottom,
             this.content.data.bottomNotice
         );
         this.renderables.element.create();
