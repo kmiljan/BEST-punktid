@@ -33,15 +33,15 @@ async function personalDisplays(name:string) {
     const frame_dash=new renderables.frames.DashboardFrame(renderables, 'frame_dash', document.getElementById('screenWrapper'), []);
     await frame_dash.create();
     let personalPointsTotal=new displays.personalPointsTotal(renderables, dataAPI, displays,  name, frame_dash.elementNode);
-    await personalPointsTotal.run();
+    personalPointsTotal.run();
     let personalLastActivities=new displays.personalLastActivities(renderables, dataAPI, displays, name, false, frame_dash.elementNode);
-    await personalLastActivities.run();
+    personalLastActivities.run();
     let personalPointsSeason=new displays.personalPointsSeason(renderables, dataAPI, displays,  name, frame_dash.elementNode);
-    await personalPointsSeason.run();
+    personalPointsSeason.run();
     let personalPointsMonth=new displays.personalPointsMonth(renderables, dataAPI, displays,  name, frame_dash.elementNode);
-    await personalPointsMonth.run();
+    personalPointsMonth.run();
     let personalGroupContributions=new displays.personalGroupContributions(renderables, dataAPI, displays,  name, false, frame_dash.elementNode);
-    await personalGroupContributions.run();
+    personalGroupContributions.run();
 
     let groupdatabreakdowns=[];
     displays.groups.forEach(
@@ -69,13 +69,13 @@ async function OverallStatisticsDisplays() {
     const frame_dash=new renderables.frames.DashboardFrame(renderables, 'frame_dash', document.getElementById('screenWrapper'), []);
     await frame_dash.create();
     let groupPeriodLeaders=new displays.GroupPeriodLeaders(renderables, dataAPI, displays,  false, frame_dash.elementNode);
-    await groupPeriodLeaders.run();
+    groupPeriodLeaders.run();
     let groupAllTimeLeaders=new displays.GroupAllTimeLeaders(renderables, dataAPI, displays,  false, frame_dash.elementNode);
-    await groupAllTimeLeaders.run();
+    groupAllTimeLeaders.run();
     let monthLeaders=new displays.PeriodLeaders(renderables, dataAPI, displays,  false, frame_dash.elementNode);
-    await monthLeaders.run();
+    monthLeaders.run();
     let allTimeLeaders=new displays.AllTimeLeaders(renderables, dataAPI, displays,  false, frame_dash.elementNode);
-    await allTimeLeaders.run();
+    allTimeLeaders.run();
 
     const frame_bottom=new renderables.frames.DashboardFrameWide(renderables, 'frame_bottom', document.getElementById('screenWrapper'), []);
     await frame_bottom.create();

@@ -38,15 +38,15 @@ function personalDisplays(name) {
         const frame_dash = new renderables.frames.DashboardFrame(renderables, 'frame_dash', document.getElementById('screenWrapper'), []);
         yield frame_dash.create();
         let personalPointsTotal = new displays.personalPointsTotal(renderables, dataAPI, displays, name, frame_dash.elementNode);
-        yield personalPointsTotal.run();
+        personalPointsTotal.run();
         let personalLastActivities = new displays.personalLastActivities(renderables, dataAPI, displays, name, false, frame_dash.elementNode);
-        yield personalLastActivities.run();
+        personalLastActivities.run();
         let personalPointsSeason = new displays.personalPointsSeason(renderables, dataAPI, displays, name, frame_dash.elementNode);
-        yield personalPointsSeason.run();
+        personalPointsSeason.run();
         let personalPointsMonth = new displays.personalPointsMonth(renderables, dataAPI, displays, name, frame_dash.elementNode);
-        yield personalPointsMonth.run();
+        personalPointsMonth.run();
         let personalGroupContributions = new displays.personalGroupContributions(renderables, dataAPI, displays, name, false, frame_dash.elementNode);
-        yield personalGroupContributions.run();
+        personalGroupContributions.run();
         let groupdatabreakdowns = [];
         displays.groups.forEach((group) => {
             const dp_obj = new displays.personalGroupBreakdown(renderables, dataAPI, displays, name, group.identifier, false, frame_dash.elementNode);
@@ -68,13 +68,13 @@ function OverallStatisticsDisplays() {
         const frame_dash = new renderables.frames.DashboardFrame(renderables, 'frame_dash', document.getElementById('screenWrapper'), []);
         yield frame_dash.create();
         let groupPeriodLeaders = new displays.GroupPeriodLeaders(renderables, dataAPI, displays, false, frame_dash.elementNode);
-        yield groupPeriodLeaders.run();
+        groupPeriodLeaders.run();
         let groupAllTimeLeaders = new displays.GroupAllTimeLeaders(renderables, dataAPI, displays, false, frame_dash.elementNode);
-        yield groupAllTimeLeaders.run();
+        groupAllTimeLeaders.run();
         let monthLeaders = new displays.PeriodLeaders(renderables, dataAPI, displays, false, frame_dash.elementNode);
-        yield monthLeaders.run();
+        monthLeaders.run();
         let allTimeLeaders = new displays.AllTimeLeaders(renderables, dataAPI, displays, false, frame_dash.elementNode);
-        yield allTimeLeaders.run();
+        allTimeLeaders.run();
         const frame_bottom = new renderables.frames.DashboardFrameWide(renderables, 'frame_bottom', document.getElementById('screenWrapper'), []);
         yield frame_bottom.create();
         let activityGraph = new displays.ActivityChartOverall(renderables, dataAPI, displays, true, frame_bottom.elementNode);
