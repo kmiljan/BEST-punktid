@@ -21,3 +21,11 @@ interface PodiumItem {
     score: number,
     place: number
 }
+
+interface PersonalMetaData {
+    [name: string]: PersonalMetaDataItem
+}
+interface PersonalMetaDataItem {
+    totalScore: number,
+    totalScoreThisMonth: number
+}

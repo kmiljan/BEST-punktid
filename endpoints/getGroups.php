@@ -3,14 +3,9 @@ header('Content-Type: text/json; charset=utf-8');
 header('Cache-Control: no-cache, no-store, must-revalidate');
 mb_internal_encoding("UTF-8");
 
-$PUBLIC_PATH = dirname(__DIR__);
-require_once($PUBLIC_PATH . '/host/host.php');
-require_once($PUBLIC_PATH . '/util/SQL_session.php');
-
-global $privateAreaDatabaseName;
-
-$conn = SQL_new_session();
-$conn->query("USE `$privateAreaDatabaseName`");
+require_once('../host/host.php');
+require_once('../util/SQL_session.php');
+require_once '../dataFetch/getGroups.php';
 
 $groupColors = [
     1 => ['#e0002c', '#fd1060'], //Kohalik tase
@@ -23,25 +18,17 @@ $groupColors = [
     8 => ['#e05e00', '#ef8a12'], //RV
 ];
 
-$sql = "SELECT V.valdkond_kood, V.nimetus FROM Valdkond V ORDER BY V.valdkond_kood";
 
-$query = $conn->prepare($sql);
-$query->execute();
-$result = $query->get_result()->fetch_all();
+$groups = getGroups();
 
-$mapper = function (array $row) use ($groupColors): array {
-    $valdkondKood = $row[0];
-    $valdkondNimetus = $row[1];
-
+$mapper = function (Group $row) use ($groupColors): array {
     return [
-        'identifier' => $valdkondNimetus,
+        'identifier' => $row->name,
         'properties' => [
-            'name' => $valdkondNimetus,
-            'colors' => $groupColors[$valdkondKood]
+            'name' => $row->name,
+            'colors' => $groupColors[$row->id]
         ]
     ];
 };
 
-$apiResponse = array_map($mapper, $result);
-
-echo json_encode($apiResponse);
+echo json_encode(array_map($mapper, $groups));

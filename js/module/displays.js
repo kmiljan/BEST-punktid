@@ -246,12 +246,10 @@ export default class Displays {
                 let metadata = [];
                 this.displayInstance.groups.forEach((group) => {
                     metadata.push({ name: group.properties.name, identifier: group.identifier });
-                    if (this.referenceData === "totalScoreThisMonth") {
-                        requests.push(this.fetcherInstance.groupPodiumThisMonth(group.identifier, 1));
-                    }
-                    else if (this.referenceData === "totalScore") {
-                        requests.push(this.fetcherInstance.groupPodiumAllTime(group.identifier, 1));
-                    }
+                    const fromTime = this.referenceData === "totalScoreThisMonth" ?
+                        new Date(2023, 4, 1) :
+                        null;
+                    requests.push(this.fetcherInstance.groupPodium(group.identifier, 1, fromTime));
                 });
                 return Promise.all(requests).then((data) => {
                     data.forEach((groupLeaderList, index) => {
@@ -344,13 +342,18 @@ export default class Displays {
                 this.content.list = [];
                 let podium = [];
                 let personalRequests = [];
-                return this.fetcherInstance.podium('all', this.referenceData, 7, this.exemptBasedOnStatus).then((data) => {
+                const fromTime = this.referenceData === "totalScoreThisMonth" ?
+                    new Date(2023, 4, 1) :
+                    null;
+                return this.fetcherInstance.allPodium(7, fromTime)
+                    .then(data => {
                     for (let i = 0; i < data.length; i++) {
                         podium.push(data[i].name);
                         personalRequests.push(this.fetcherInstance.personalMetadata(data[i].name));
                     }
                     return Promise.all(personalRequests);
-                }).then((personalGroupBreakdownList) => {
+                })
+                    .then((personalGroupBreakdownList) => {
                     let series = [];
                     let colors = [];
                     for (let j = 0; j < this.displayInstance.groups.length; j++) {

@@ -56,7 +56,7 @@ export default class DataAPI {
     ;
     personalMetadata(name) {
         name = encodeURI(name);
-        return this.requestMethod(`/get_data.php?type=personalmetadata&person_name=${name}`);
+        return this.getRequest(`/api/personalMetadata?personName=${name}`);
     }
     ;
     groupMetaData() {
@@ -79,11 +79,19 @@ export default class DataAPI {
         return this.requestMethod(`/get_data.php?type=podium&group=${group}&referencedata=${referenceData}&podiumsize=${podiumSizeString}&exemptBasedOnStatus=${exemptBasedOnStatusString}`);
     }
     ;
-    groupPodiumThisMonth(group, podiumSize) {
-        return this.getRequest(`api/podium/group/thisMonth?group=${encodeURI(group)}&podiumsize=${podiumSize}`);
+    allPodium(podiumSize, from) {
+        let url = `api/podium/all?podiumsize=${podiumSize}`;
+        if (from !== null) {
+            url += `&from=${from.toISOString()}`;
+        }
+        return this.getRequest(url);
     }
-    groupPodiumAllTime(group, podiumSize) {
-        return this.getRequest(`api/podium/group/allTime?group=${encodeURI(group)}&podiumsize=${podiumSize}`);
+    groupPodium(group, podiumSize, from) {
+        let url = `api/podium/group/allTime?group=${encodeURI(group)}&podiumsize=${podiumSize}`;
+        if (from !== null) {
+            url += `&from=${from.toISOString()}`;
+        }
+        return this.getRequest(url);
     }
     activityReport(name, group) {
         group = encodeURI(group);

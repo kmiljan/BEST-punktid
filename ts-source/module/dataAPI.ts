@@ -60,9 +60,10 @@ export default class DataAPI {
         name=encodeURI(name);
         return this.requestMethod(`/get_data.php?type=personalstatus&person_name=${name}`);
     };
-    personalMetadata(name: string):Promise<object> {
+    personalMetadata(name: string):Promise<PersonalMetaData> {
         name=encodeURI(name);
-        return this.requestMethod(`/get_data.php?type=personalmetadata&person_name=${name}`);
+
+        return this.getRequest<PersonalMetaData>(`/api/personalMetadata?personName=${name}`);
     };
     groupMetaData():Promise<object> {
         return this.requestMethod(`/get_data.php?type=groupmetadata`);
@@ -84,12 +85,21 @@ export default class DataAPI {
         return this.requestMethod(`/get_data.php?type=podium&group=${group}&referencedata=${referenceData}&podiumsize=${podiumSizeString}&exemptBasedOnStatus=${exemptBasedOnStatusString}`);
     };
 
-    groupPodiumThisMonth(group: string, podiumSize: number): Promise<PodiumItem[]> {
-        return this.getRequest<PodiumItem[]>(`api/podium/group/thisMonth?group=${encodeURI(group)}&podiumsize=${podiumSize}`);
+    allPodium(podiumSize: number, from: Date|null): Promise<PodiumItem[]> {
+        let url = `api/podium/all?podiumsize=${podiumSize}`;
+        if (from !== null) {
+            url += `&from=${from.toISOString()}`
+        }
+
+        return this.getRequest<PodiumItem[]>(url);
     }
 
-    groupPodiumAllTime(group: string, podiumSize: number): Promise<PodiumItem[]> {
-        return this.getRequest<PodiumItem[]>(`api/podium/group/allTime?group=${encodeURI(group)}&podiumsize=${podiumSize}`);
+    groupPodium(group: string, podiumSize: number, from: Date|null): Promise<PodiumItem[]> {
+        let url = `api/podium/group/allTime?group=${encodeURI(group)}&podiumsize=${podiumSize}`;
+        if (from !== null) {
+            url += `&from=${from.toISOString()}`
+        }
+        return this.getRequest<PodiumItem[]>(url);
     }
 
     activityReport(name: string|null, group: string):Promise<object> {

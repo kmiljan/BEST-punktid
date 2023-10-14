@@ -21,8 +21,8 @@ RewriteRule ^bestikas/(.*)$ person.php?name=$1
 
 RewriteRule ^api/otsiBestikas endpoints/searchByName.php
 RewriteRule ^api/groups endpoints/getGroups.php
-RewriteRule ^api/podium/group/allTime endpoints/podium/getAllTimePodiumForGroup.php
-RewriteRule ^api/podium/group/thisMonth endpoints/podium/getThisMonthPodiumForGroup.php
-RewriteRule ^api/podium/all/allTime endpoints/podium/getPodiumForAllTime.php
-RewriteRule ^api/podium/all/thisMonth endpoints/podium/getPodiumForThisMonth.php
+RewriteRule ^api/podium/group endpoints/podium/getPodiumForGroup.php
+RewriteRule ^api/podium/all endpoints/podium/getPodium.php
+RewriteRule ^api/personalMetadata endpoints/getPersonalMetaData.php
+
 

@@ -3,20 +3,20 @@ header('Content-Type: text/json; charset=utf-8');
 header('Cache-Control: no-cache, no-store, must-revalidate');
 mb_internal_encoding("UTF-8");
 
-require_once('../../host/host.php');
-require_once('../../util/SQL_session.php');
-
+require_once '../../host/host.php';
+require_once '../../util/SQL_session.php';
+require_once '../../common/utils.php';
 global $privateAreaDatabaseName;
 
 $group = $_GET['group'];
 $podiumSize = intval($_GET['podiumsize']);
+$from = isset($_GET['from']) ? new DateTime($_GET['from']) : getMinDate();
+$from = $from->format("Y-m-d H:i:s");
+
 $podiumSize = $podiumSize <= 0 ? 1 : $podiumSize;
 
 $conn = SQL_new_session();
 $conn->query("USE `$privateAreaDatabaseName`");
-
-$d = new DateTime();
-$thisMonthStart = (new DateTime("2023-05-01"))->format("Y-m-d H:i:s");
 
 $sql = "
 select CONCAT_WS(' ', IFNULL(I.eesnimi, ''), IFNULL(I.perenimi, '')) as nimi, punktisumma, ROW_NUMBER() over () as koht
@@ -44,7 +44,7 @@ LIMIT ?
 ";
 
 $query=$conn->prepare($sql);
-$query->bind_param('ssi', $group, $thisMonthStart, $podiumSize);
+$query->bind_param('ssi', $group, $from, $podiumSize);
 $query->execute();
 
 $result=$query->get_result()->fetch_all();
