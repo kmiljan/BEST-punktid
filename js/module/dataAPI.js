@@ -33,11 +33,15 @@ export default class DataAPI {
         });
     }
     ;
-    requestMethodText(URL) {
-        return fetch(URL, {}).then(res => {
-            if (res.ok) {
-                return res.text();
-            }
+    requestMethodText(pathWithQuery) {
+        const url = new URL(pathWithQuery, window.location.origin);
+        return fetch(url, {})
+            .then(res => {
+            return res.text();
+        })
+            .catch(reason => {
+            console.error(`request to url ${pathWithQuery} failed. Reason: ${reason}`);
+            throw "failed request";
         });
     }
     ;
@@ -48,38 +52,16 @@ export default class DataAPI {
         name = encodeURI(name);
         return this.requestMethod(`/get_data.php?type=personaldata&person_name=${name}`);
     }
-    ;
     personalStatus(name) {
         return this.getRequest(`/api/personalStatus?personName=${encodeURI(name)}`);
     }
-    ;
     personalMetadata(name) {
         name = encodeURI(name);
         return this.getRequest(`/api/personalMetadata?personName=${name}`);
     }
-    ;
-    groupMetaData() {
-        return this.requestMethod(`/get_data.php?type=groupmetadata`);
-    }
-    ;
-    placementBetter(name, referenceData) {
+    placement(name, referenceData) {
         const url = `/api/podium/personPlacement?personName=${encodeURI(name)}&referenceData=${referenceData}`;
         return this.getRequest(url);
-    }
-    placement(group, name, exemptBasedOnStatus, referenceData) {
-        name = encodeURI(name);
-        referenceData = encodeURI(referenceData);
-        group = encodeURI(group);
-        const exemptBasedOnStatusString = encodeURI(String(exemptBasedOnStatus));
-        return this.requestMethod(`/get_data.php?type=podium&person_name=${name}&exemptBasedOnStatus=${exemptBasedOnStatusString}&referencedata=${referenceData}&group=${group}`);
-    }
-    ;
-    podium(group, referenceData, podiumSize, exemptBasedOnStatus) {
-        group = encodeURI(group);
-        referenceData = encodeURI(referenceData);
-        const podiumSizeString = encodeURI(String(podiumSize));
-        const exemptBasedOnStatusString = encodeURI(String(exemptBasedOnStatus));
-        return this.requestMethod(`/get_data.php?type=podium&group=${group}&referencedata=${referenceData}&podiumsize=${podiumSizeString}&exemptBasedOnStatus=${exemptBasedOnStatusString}`);
     }
     allPodium(podiumSize, from) {
         let url = `api/podium/all?podiumsize=${podiumSize}`;
@@ -105,7 +87,7 @@ export default class DataAPI {
     lastActivities(name, amount) {
         return this.getRequest(`/api/lastActivities?personName=${encodeURI(name)}&count=${amount}`);
     }
-    svg(URL) {
-        return this.requestMethodText(`/resource/${URL}`);
+    svg(fileName) {
+        return this.requestMethodText(`/resource/${fileName}`);
     }
 }

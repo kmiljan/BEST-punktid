@@ -10,7 +10,7 @@ export default class Displays {
             }
             ;
             data() {
-                return this.fetcherInstance.placementBetter(this.name, ReferenceData.totalScore)
+                return this.fetcherInstance.placement(this.name, ReferenceData.totalScore)
                     .then(result => {
                     this.rawContent = result;
                 });
@@ -41,7 +41,7 @@ export default class Displays {
             }
             ;
             data() {
-                return this.fetcherInstance.placementBetter(this.name, ReferenceData.totalScoreThisSeason)
+                return this.fetcherInstance.placement(this.name, ReferenceData.totalScoreThisSeason)
                     .then(result => {
                     this.rawContent = result;
                 });
@@ -111,7 +111,7 @@ export default class Displays {
             }
             ;
             data() {
-                return this.fetcherInstance.placementBetter(this.name, ReferenceData.totalScoreThisMonth)
+                return this.fetcherInstance.placement(this.name, ReferenceData.totalScoreThisMonth)
                     .then(result => {
                     this.rawContent = result;
                 });
@@ -448,7 +448,6 @@ export default class Displays {
                     });
                 });
             }
-            ;
             create() {
                 this.renderables = {
                     frame: new this.rendererInstance.frames.DashboardElementFrame(this.rendererInstance, this.id + "_f", this.parentNode, [])
@@ -687,7 +686,7 @@ export default class Displays {
                     .then(data => {
                     this.content.top_score = data[0].score;
                 }).then(() => {
-                    return this.fetcherInstance.placementBetter(this.name, ReferenceData.totalScore);
+                    return this.fetcherInstance.placement(this.name, ReferenceData.totalScore);
                 }).then(data => {
                     this.content.person_score = data.score;
                     //Calculate result

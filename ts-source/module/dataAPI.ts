@@ -39,56 +39,42 @@ export default class DataAPI {
             )
         });
     };
-    requestMethodText(URL: string):Promise<string> {
-        return fetch(URL, {}).then(
-            res=>{
-                if(res.ok){
+
+    requestMethodText(pathWithQuery: string): Promise<string> {
+        const url = new URL(pathWithQuery, window.location.origin);
+        return fetch(url, {})
+            .then(res => {
                     return res.text();
                 }
-            }
-        );
+            )
+            .catch(reason => {
+                console.error(`request to url ${pathWithQuery} failed. Reason: ${reason}`)
+                throw "failed request";
+            });
     };
 
     groups():Promise<Group[]> {
         return this.getRequest<Group[]>('/api/groups')
     }
 
-    personalData(name: string):Promise<object> {
-        name=encodeURI(name);
+    personalData(name: string): Promise<object> {
+        name = encodeURI(name);
         return this.requestMethod(`/get_data.php?type=personaldata&person_name=${name}`);
-    };
-    personalStatus(name: string):Promise<string> {
+    }
+
+    personalStatus(name: string): Promise<string> {
         return this.getRequest<string>(`/api/personalStatus?personName=${encodeURI(name)}`);
-    };
+    }
+
     personalMetadata(name: string):Promise<PersonalMetaData> {
         name=encodeURI(name);
 
         return this.getRequest<PersonalMetaData>(`/api/personalMetadata?personName=${name}`);
-    };
-    groupMetaData():Promise<object> {
-        return this.requestMethod(`/get_data.php?type=groupmetadata`);
-    };
-
-    placementBetter(name: string, referenceData: ReferenceData): Promise<PodiumItem> {
-        const url = `/api/podium/personPlacement?personName=${encodeURI(name)}&referenceData=${referenceData}`
-        return this.getRequest<PodiumItem>(url);
     }
 
-    placement(group: string, name: string, exemptBasedOnStatus: boolean,  referenceData: string):Promise<object> {
-        name=encodeURI(name);
-        referenceData=encodeURI(referenceData);
-        group=encodeURI(group);
-        const exemptBasedOnStatusString=encodeURI(String(exemptBasedOnStatus));
-        return this.requestMethod(`/get_data.php?type=podium&person_name=${name}&exemptBasedOnStatus=${exemptBasedOnStatusString}&referencedata=${referenceData}&group=${group}`);
-    };
-    podium(group: string, referenceData: string, podiumSize: number, exemptBasedOnStatus: boolean ):Promise<object> {
-        group=encodeURI(group);
-        referenceData=encodeURI(referenceData);
-        const podiumSizeString=encodeURI(String(podiumSize));
-        const exemptBasedOnStatusString=encodeURI(String(exemptBasedOnStatus));
-
-
-        return this.requestMethod(`/get_data.php?type=podium&group=${group}&referencedata=${referenceData}&podiumsize=${podiumSizeString}&exemptBasedOnStatus=${exemptBasedOnStatusString}`);
+    placement(name: string, referenceData: ReferenceData): Promise<PodiumItem> {
+        const url = `/api/podium/personPlacement?personName=${encodeURI(name)}&referenceData=${referenceData}`
+        return this.getRequest<PodiumItem>(url);
     }
 
     allPodium(podiumSize: number, from: Date|null): Promise<PodiumItem[]> {
@@ -122,7 +108,7 @@ export default class DataAPI {
         return this.getRequest<ActivityItem[]>(`/api/lastActivities?personName=${encodeURI(name)}&count=${amount}`)
     }
 
-    svg(URL){
-        return this.requestMethodText(`/resource/${URL}`);
+    svg(fileName: string): Promise<string> {
+        return this.requestMethodText(`/resource/${fileName}`);
     }
 }
