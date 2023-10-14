@@ -49,18 +49,7 @@ export default class DataAPI {
     };
 
     groups():Promise<Group[]> {
-        return this.requestMethod(`/get_data.php?type=groups`)
-            .then(data => {
-                const res = [];
-                for(const group in data) {
-                    res.push({
-                        identifier: group,
-                        properties: data[group]
-                    } as Group);
-                }
-                return res
-            });
-        //TODO return this.getRequest<Group[]>('/api/groups')
+        return this.getRequest<Group[]>('/api/groups')
     }
 
     personalData(name: string):Promise<object> {
@@ -90,8 +79,19 @@ export default class DataAPI {
         referenceData=encodeURI(referenceData);
         const podiumSizeString=encodeURI(String(podiumSize));
         const exemptBasedOnStatusString=encodeURI(String(exemptBasedOnStatus));
+
+
         return this.requestMethod(`/get_data.php?type=podium&group=${group}&referencedata=${referenceData}&podiumsize=${podiumSizeString}&exemptBasedOnStatus=${exemptBasedOnStatusString}`);
     };
+
+    groupPodiumThisMonth(group: string, podiumSize: number): Promise<PodiumItem[]> {
+        return this.getRequest<PodiumItem[]>(`api/podium/group/thisMonth?group=${encodeURI(group)}&podiumsize=${podiumSize}`);
+    }
+
+    groupPodiumAllTime(group: string, podiumSize: number): Promise<PodiumItem[]> {
+        return this.getRequest<PodiumItem[]>(`api/podium/group/allTime?group=${encodeURI(group)}&podiumsize=${podiumSize}`);
+    }
+
     activityReport(name: string|null, group: string):Promise<object> {
         group=encodeURI(group);
         if (name) {

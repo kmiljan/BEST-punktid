@@ -15,3 +15,9 @@ interface Group {
     {identifier:'HR_teamwork', properties: {name: 'Tiimitöö', colors: ["blue", "lightblue"]}},
     {identifier:'HR_projects', properties: {name: 'Projektid', colors: ["blue", "lightblue"]}},
 ];*/
+
+interface PodiumItem {
+    name: string,
+    score: number,
+    place: number
+}

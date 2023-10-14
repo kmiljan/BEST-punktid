@@ -34,7 +34,7 @@ $mapper = function (array $row) use ($groupColors): array {
     $valdkondNimetus = $row[1];
 
     return [
-        'identifier' => strtolower(str_replace(' ', '-', $valdkondNimetus)),
+        'identifier' => $valdkondNimetus,
         'properties' => [
             'name' => $valdkondNimetus,
             'colors' => $groupColors[$valdkondKood]

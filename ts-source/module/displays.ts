@@ -341,7 +341,12 @@ export default class Displays {
                 let metadata=[];
                 this.displayInstance.groups.forEach((group)=>{
                     metadata.push({name: group.properties.name, identifier: group.identifier});
-                    requests.push(this.fetcherInstance.podium(group.identifier, this.referenceData, 1, this.exemptBasedOnStatus));
+                    if (this.referenceData === "totalScoreThisMonth") {
+                        requests.push(this.fetcherInstance.groupPodiumThisMonth(group.identifier, 1));
+                    }
+                    else if (this.referenceData === "totalScore") {
+                        requests.push(this.fetcherInstance.groupPodiumAllTime(group.identifier, 1));
+                    }
                 });
                 return Promise.all(requests).then(
                     (data)=>{

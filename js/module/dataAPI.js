@@ -42,18 +42,7 @@ export default class DataAPI {
     }
     ;
     groups() {
-        return this.requestMethod(`/get_data.php?type=groups`)
-            .then(data => {
-            const res = [];
-            for (const group in data) {
-                res.push({
-                    identifier: group,
-                    properties: data[group]
-                });
-            }
-            return res;
-        });
-        //TODO return this.getRequest<Group[]>('/api/groups')
+        return this.getRequest('/api/groups');
     }
     personalData(name) {
         name = encodeURI(name);
@@ -90,6 +79,12 @@ export default class DataAPI {
         return this.requestMethod(`/get_data.php?type=podium&group=${group}&referencedata=${referenceData}&podiumsize=${podiumSizeString}&exemptBasedOnStatus=${exemptBasedOnStatusString}`);
     }
     ;
+    groupPodiumThisMonth(group, podiumSize) {
+        return this.getRequest(`api/podium/group/thisMonth?group=${encodeURI(group)}&podiumsize=${podiumSize}`);
+    }
+    groupPodiumAllTime(group, podiumSize) {
+        return this.getRequest(`api/podium/group/allTime?group=${encodeURI(group)}&podiumsize=${podiumSize}`);
+    }
     activityReport(name, group) {
         group = encodeURI(group);
         if (name) {
