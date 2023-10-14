@@ -2,7 +2,7 @@
 
 require_once('../host/host.php');
 require_once('../util/SQL_session.php');
-require_once '../common/utils.php';
+require_once '../util/time.php';
 
 class GroupingMetaData {
     public function __construct(
@@ -16,8 +16,8 @@ class GroupingMetaData {
 
 function getGroupingMetadata(string $personName, string $groupName): GroupingMetaData {
     return new GroupingMetaData(
-        totalScore: getTotalPoints(getMinDate(), $personName, $groupName),
-        totalScoreThisMonth: getTotalPoints(getMonthStart(), $personName, $groupName)
+        totalScore: getTotalPoints(getMinStartDate(), $personName, $groupName),
+        totalScoreThisMonth: getTotalPoints(getMonthStartDate(), $personName, $groupName)
     );
 }
 

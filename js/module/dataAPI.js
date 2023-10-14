@@ -63,6 +63,10 @@ export default class DataAPI {
         return this.requestMethod(`/get_data.php?type=groupmetadata`);
     }
     ;
+    placementBetter(name, referenceData) {
+        const url = `/api/podium/personPlacement?personName=${encodeURI(name)}&referenceData=${referenceData}`;
+        return this.getRequest(url);
+    }
     placement(group, name, exemptBasedOnStatus, referenceData) {
         name = encodeURI(name);
         referenceData = encodeURI(referenceData);

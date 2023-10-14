@@ -1,5 +1,5 @@
 import notify from '../module/debug.js';
-import {ActivityReportItem, Group, PersonalMetaData, PodiumItem} from "../types";
+import {ActivityReportItem, Group, PersonalMetaData, PodiumItem, ReferenceData} from "../types";
 export default class DataAPI {
     constructor(){};
 
@@ -69,6 +69,12 @@ export default class DataAPI {
     groupMetaData():Promise<object> {
         return this.requestMethod(`/get_data.php?type=groupmetadata`);
     };
+
+    placementBetter(name: string, referenceData: ReferenceData): Promise<PodiumItem> {
+        const url = `/api/podium/personPlacement?personName=${encodeURI(name)}&referenceData=${referenceData}`
+        return this.getRequest<PodiumItem>(url);
+    }
+
     placement(group: string, name: string, exemptBasedOnStatus: boolean,  referenceData: string):Promise<object> {
         name=encodeURI(name);
         referenceData=encodeURI(referenceData);

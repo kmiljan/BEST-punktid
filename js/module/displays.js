@@ -1,4 +1,5 @@
 import { round, truncate } from './round.js';
+import { ReferenceData } from "../types";
 export default class Displays {
     constructor() {
         //this.personalPointsTotal=personalPointsTotal;
@@ -9,8 +10,9 @@ export default class Displays {
             }
             ;
             data() {
-                return this.fetcherInstance.placement('all', this.name, false, 'totalScore').then(data => {
-                    this.rawContent = data[0];
+                return this.fetcherInstance.placementBetter(this.name, ReferenceData.totalScore)
+                    .then(result => {
+                    this.rawContent = result;
                 });
             }
             ;
@@ -39,10 +41,12 @@ export default class Displays {
             }
             ;
             data() {
-                return this.fetcherInstance.placement('all', this.name, false, 'totalScoreThisSeason').then(data => {
-                    this.rawContent = data[0];
+                return this.fetcherInstance.placementBetter(this.name, ReferenceData.totalScoreThisSeason)
+                    .then(result => {
+                    this.rawContent = result;
                 });
             }
+            ;
             run() {
                 return this.data().then(() => {
                     this.content = {};
@@ -107,10 +111,12 @@ export default class Displays {
             }
             ;
             data() {
-                return this.fetcherInstance.placement('all', this.name, false, 'totalScoreThisMonth').then(data => {
-                    this.rawContent = data[0];
+                return this.fetcherInstance.placementBetter(this.name, ReferenceData.totalScoreThisMonth)
+                    .then(result => {
+                    this.rawContent = result;
                 });
             }
+            ;
             run() {
                 return this.data().then(() => {
                     this.content = {};

@@ -1,4 +1,4 @@
-interface Group {
+export interface Group {
     identifier:string,
     properties:{
         name:string,
@@ -16,22 +16,31 @@ interface Group {
     {identifier:'HR_projects', properties: {name: 'Projektid', colors: ["blue", "lightblue"]}},
 ];*/
 
-interface PodiumItem {
+export interface PodiumItem {
     name: string,
     score: number,
     place: number
 }
 
-interface PersonalMetaData {
+export interface PersonalMetaData {
     [name: string]: PersonalMetaDataItem
 }
-interface PersonalMetaDataItem {
+export interface PersonalMetaDataItem {
     totalScore: number,
     totalScoreThisMonth: number
 }
-interface ActivityReportItem {
+export interface ActivityReportItem {
     y: number,
     m: number,
     activities: number,
     score: number
 }
+
+export enum ReferenceData {
+    totalScore = "totalScore",
+    totalScoreThisSeason = "totalScoreThisSeason",
+    totalScoreThisMonth = "totalScoreThisMonth"
+}
+
+// See on siin selleks, et tsc koodi kokku panemisel tekitaks samanimelise javascript faili
+var _ = "mingi vaartus";

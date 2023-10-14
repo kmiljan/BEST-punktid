@@ -1,7 +1,7 @@
 import Renderables from "./render";
 import DataAPI from './dataAPI.js';
 import {round, truncate} from './round.js';
-import {ActivityReportItem, Group} from "../types";
+import {ActivityReportItem, Group, PodiumItem, ReferenceData} from "../types";
 
 
 export default class Displays {
@@ -27,28 +27,29 @@ export default class Displays {
         //this.personalPointsTotal=personalPointsTotal;
         this.personalPointsTotal= class extends personalPoints{
             name:string;
+            rawContent: PodiumItem;
             constructor(rendererInstance:Renderables, fetcherInstance:DataAPI, displayInstance:Displays, name:string, parentNode:HTMLElement){
                 super(rendererInstance, fetcherInstance, displayInstance,  'd_p_totalpoints', parentNode);
                 this.name=name;
             };
             data():Promise<void>{
-                return this.fetcherInstance.placement('all', this.name, false, 'totalScore').then(data=>{
-                    this.rawContent=data[0];
-                });
+                return this.fetcherInstance.placementBetter(this.name, ReferenceData.totalScore)
+                    .then(result => {
+                        this.rawContent = result
+                    });
             };
             run(){
                 return this.data().then(()=>{
-                    this.content={};
-                    this.content.data={};
-                    this.content.data.top='Punktid';
-                    this.content.data.center=this.rawContent.score;
-                    if(this.rawContent.score>0) {
-                        this.content.data.bottom=this.rawContent.place;
-                        this.content.data.bottomNotice=". koht";
-                    }
-                    else {
-                        this.content.data.bottom="";
-                        this.content.data.bottomNotice="";
+                    this.content = {};
+                    this.content.data = {};
+                    this.content.data.top = 'Punktid';
+                    this.content.data.center = this.rawContent.score;
+                    if (this.rawContent.score > 0) {
+                        this.content.data.bottom = this.rawContent.place;
+                        this.content.data.bottomNotice = ". koht";
+                    } else {
+                        this.content.data.bottom = "";
+                        this.content.data.bottomNotice = "";
                     }
                     this.create(["gradient1"]);
                 });
@@ -56,15 +57,17 @@ export default class Displays {
         };
         this.personalPointsSeason= class extends personalPoints{
             name:string;
+            rawContent: PodiumItem;
             constructor(rendererInstance:Renderables, fetcherInstance:DataAPI, displayInstance:Displays, name:string, parentNode:HTMLElement){
                 super(rendererInstance, fetcherInstance, displayInstance,  'd_p_totalpointsthisseason', parentNode);
                 this.name=name;
             };
             data():Promise<void>{
-                return this.fetcherInstance.placement('all', this.name, false, 'totalScoreThisSeason').then(data=>{
-                    this.rawContent=data[0];
-                });
-            }
+                return this.fetcherInstance.placementBetter(this.name, ReferenceData.totalScoreThisSeason)
+                    .then(result => {
+                        this.rawContent = result
+                    });
+            };
             run(){
                 return this.data().then(()=>{
                     this.content={};
@@ -146,28 +149,29 @@ export default class Displays {
         };
         this.personalPointsMonth= class extends personalPoints{
             name:string;
+            rawContent: PodiumItem
             constructor(rendererInstance:Renderables, fetcherInstance:DataAPI, displayInstance:Displays, name:string, parentNode:HTMLElement){
                 super(rendererInstance, fetcherInstance, displayInstance, 'd_p_totalpointsthisseason', parentNode);
                 this.name=name;
             };
             data():Promise<void>{
-                return this.fetcherInstance.placement('all', this.name, false, 'totalScoreThisMonth').then(data=>{
-                    this.rawContent=data[0];
-                });
-            }
+                return this.fetcherInstance.placementBetter(this.name, ReferenceData.totalScoreThisMonth)
+                    .then(result => {
+                        this.rawContent = result
+                    });
+            };
             run(){
-                return this.data().then(()=>{
-                    this.content={};
-                    this.content.data={};
-                    this.content.data.top='Sellel kuul';
-                    this.content.data.center=this.rawContent.score;
-                    if(this.rawContent.score>0) {
-                        this.content.data.bottom=this.rawContent.place;
-                        this.content.data.bottomNotice=". koht";
-                    }
-                    else {
-                        this.content.data.bottom="";
-                        this.content.data.bottomNotice="";
+                return this.data().then(() => {
+                    this.content = {};
+                    this.content.data = {};
+                    this.content.data.top = 'Sellel kuul';
+                    this.content.data.center = this.rawContent.score;
+                    if (this.rawContent.score > 0) {
+                        this.content.data.bottom = this.rawContent.place;
+                        this.content.data.bottomNotice = ". koht";
+                    } else {
+                        this.content.data.bottom = "";
+                        this.content.data.bottomNotice = "";
                     }
                     this.create(["gradient3"]);
                 });

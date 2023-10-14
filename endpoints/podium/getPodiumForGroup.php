@@ -5,12 +5,12 @@ mb_internal_encoding("UTF-8");
 
 require_once '../../host/host.php';
 require_once '../../util/SQL_session.php';
-require_once '../../common/utils.php';
+require_once '../../util/time.php';
 global $privateAreaDatabaseName;
 
 $group = $_GET['group'];
 $podiumSize = intval($_GET['podiumsize']);
-$from = isset($_GET['from']) ? new DateTime($_GET['from']) : getMinDate();
+$from = isset($_GET['from']) ? new DateTime($_GET['from']) : getMinStartDate();
 $from = $from->format("Y-m-d H:i:s");
 
 $podiumSize = $podiumSize <= 0 ? 1 : $podiumSize;

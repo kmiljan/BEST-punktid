@@ -25,5 +25,6 @@ RewriteRule ^api/podium/group endpoints/podium/getPodiumForGroup.php
 RewriteRule ^api/podium/all endpoints/podium/getPodium.php
 RewriteRule ^api/personalMetadata endpoints/getPersonalMetaData.php
 RewriteRule ^api/activityReport endpoints/activityReport.php
+RewriteRule ^api/podium/personPlacement endpoints/podium/getPersonPlacement.php
 
 
