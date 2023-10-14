@@ -93,13 +93,12 @@ export default class DataAPI {
         }
         return this.getRequest(url);
     }
-    activityReport(name, group) {
-        group = encodeURI(group);
+    activityReport(name) {
+        let url = `/api/activityReport`;
         if (name) {
-            name = encodeURI(name);
-            return this.requestMethod(`/get_data.php?type=activityreport&person_name=${name}&group=${group}`);
+            url += `?personName=${encodeURI(name)}`;
         }
-        return this.requestMethod(`/get_data.php?type=activityreport&group=${group}`);
+        return this.getRequest(url);
     }
     ;
     exempt(name) {

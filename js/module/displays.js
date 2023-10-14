@@ -84,34 +84,6 @@ export default class Displays {
                     frame: new this.rendererInstance.frames.InputFrame(this.rendererInstance, this.id + "_f", this.parentNode, [])
                 };
                 this.renderables.frame.create();
-                /*//Create title
-                this.renderables.header=new this.rendererInstance.elements.ElementTitle(
-                    this.rendererInstance,
-                    this.id+"_title",
-                    this.renderables.frame.frameNode,
-                    []
-                );
-                this.renderables.header.data(this.groupObject.properties.name, "Töögrupi ülevaade");
-                this.renderables.header.create();
-    
-                //Create total
-                this.renderables.total=new this.rendererInstance.elements.Value(
-                    this.rendererInstance,
-                    this.id+"_total",
-                    this.renderables.frame.frameNode,
-                    ["colored-text_"+this.groupObject.identifier]
-                );
-                this.renderables.total.data(this.content.totalScore);
-                this.renderables.total.create();
-    
-                //Create stripe
-                this.renderables.stripe=new this.rendererInstance.elements.Stripe(
-                    this.rendererInstance,
-                    this.id+"_stripe",
-                    this.renderables.frame.frameNode,
-                    ["gradient_"+this.groupObject.identifier]
-                );
-                this.renderables.stripe.create();*/
                 //Create element
                 this.renderables.element = new this.rendererInstance.elements.AutocompleteInput(this.rendererInstance, this.id + "_content", this.renderables.frame.frameNode, []);
                 this.renderables.element.data(this.content.list, this.navigateToPersonalPage);
@@ -605,7 +577,8 @@ export default class Displays {
             }
             ;
             data() {
-                return this.fetcherInstance.activityReport(this.name, this.group).then(data => {
+                return this.fetcherInstance.activityReport(this.name)
+                    .then(data => {
                     this.rawContent = data;
                     //series1: [value, value]
                     //series2: [value, value]
@@ -620,7 +593,7 @@ export default class Displays {
                         data: []
                     };
                     this.content.categories = [];
-                    for (let i = this.rawContent.length - 1; i > 0; i--) {
+                    for (let i = 0; i < this.rawContent.length; i++) {
                         series1.data.push(truncate(this.rawContent[i].score));
                         series2.data.push(truncate(this.rawContent[i].activities));
                         this.content.categories.push(String(this.rawContent[i].m) + " " + String(this.rawContent[i].y));

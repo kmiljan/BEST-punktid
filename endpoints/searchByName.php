@@ -15,23 +15,24 @@ if (strlen($userInput) <= 3) {
     return;
 }
 
-$input = '%' . $userInput . "%";
+$input = $userInput . "%";
 
 $conn = SQL_new_session();
 $conn->query("USE `$privateAreaDatabaseName`");
 
 $sql = "
-SELECT DISTINCT CONCAT_WS(' ',
-    NULLIF(I.eesnimi, ''),
-    NULLIF(I.perenimi, '')) 
+SELECT DISTINCT CONCAT_WS(' ', NULLIF(I.eesnimi, ''), NULLIF(I.perenimi, ''), IF(NULLIF(I.hyydnimi, '') IS NULL, NULL, CONCAT('(', I.hyydnimi, ')'))) as nimi
 FROM Liikmelisus L 
     LEFT JOIN Isik I ON L.isik_id = I.isik_id 
 WHERE I.isiku_seisundi_liik_kood = 1
-AND CONCAT_WS(' ', I.eesnimi, I.perenimi) like ?
-LIMIT 10";
+AND (
+    lower(CONCAT_WS(' ', I.eesnimi, I.perenimi, I.hyydnimi)) like ?
+    OR LOWER(CONCAT_WS(' ', NULLIF(I.eesnimi, ''), NULLIF(I.perenimi, ''), IF(NULLIF(I.hyydnimi, '') IS NULL, NULL, CONCAT('(', I.hyydnimi, ')')))) like ?
+    )
+LIMIT 6";
 
 $query=$conn->prepare($sql);
-$query->bind_param('s', $input);
+$query->bind_param('ss', $input, $input);
 $query->execute();
 $result=$query->get_result()->fetch_all();
 

@@ -29,3 +29,9 @@ interface PersonalMetaDataItem {
     totalScore: number,
     totalScoreThisMonth: number
 }
+interface ActivityReportItem {
+    y: number,
+    m: number,
+    activities: number,
+    score: number
+}

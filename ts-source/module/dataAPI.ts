@@ -1,4 +1,5 @@
 import notify from '../module/debug.js';
+import {ActivityReportItem, Group, PersonalMetaData, PodiumItem} from "../types";
 export default class DataAPI {
     constructor(){};
 
@@ -102,13 +103,14 @@ export default class DataAPI {
         return this.getRequest<PodiumItem[]>(url);
     }
 
-    activityReport(name: string|null, group: string):Promise<object> {
-        group=encodeURI(group);
+    activityReport(name: string|null):Promise<ActivityReportItem[]> {
+        let url = `/api/activityReport`;
+
         if (name) {
-            name=encodeURI(name);
-            return this.requestMethod(`/get_data.php?type=activityreport&person_name=${name}&group=${group}`);
+            url += `?personName=${encodeURI(name)}`
         }
-        return this.requestMethod(`/get_data.php?type=activityreport&group=${group}`);
+
+        return this.getRequest<ActivityReportItem[]>(url);
     };
     exempt(name: string):Promise<object> {
         name=encodeURI(name);

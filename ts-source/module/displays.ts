@@ -1,13 +1,28 @@
 import Renderables from "./render";
 import DataAPI from './dataAPI.js';
 import {round, truncate} from './round.js';
-
+import {ActivityReportItem, Group} from "../types";
 
 
 export default class Displays {
-    groups:Array<Group>;
-    id:number;
+    groups: Array<Group>;
+    id: number;
     styleContainer;
+    personalPointsTotal;
+    personalPointsSeason;
+    NameInput;
+    personalPointsMonth;
+    personalGroupBreakdown;
+    GroupPeriodLeaders;
+    GroupAllTimeLeaders;
+    PeriodLeaders;
+    AllTimeLeaders;
+    personalLastActivities;
+    personalGroupContributions;
+    ActivityChart;
+    ExemptionWarning;
+    ActivityChartOverall;
+    Splash;
     constructor(){
         //this.personalPointsTotal=personalPointsTotal;
         this.personalPointsTotal= class extends personalPoints{
@@ -105,37 +120,7 @@ export default class Displays {
                     frame: new this.rendererInstance.frames.InputFrame(this.rendererInstance, this.id+"_f",  this.parentNode, [])
                 };
                 this.renderables.frame.create();
-    
-    
-                /*//Create title
-                this.renderables.header=new this.rendererInstance.elements.ElementTitle(
-                    this.rendererInstance, 
-                    this.id+"_title",  
-                    this.renderables.frame.frameNode, 
-                    []
-                );
-                this.renderables.header.data(this.groupObject.properties.name, "Töögrupi ülevaade");
-                this.renderables.header.create();
-    
-                //Create total
-                this.renderables.total=new this.rendererInstance.elements.Value(
-                    this.rendererInstance, 
-                    this.id+"_total",  
-                    this.renderables.frame.frameNode, 
-                    ["colored-text_"+this.groupObject.identifier]
-                );
-                this.renderables.total.data(this.content.totalScore);
-                this.renderables.total.create();
-    
-                //Create stripe
-                this.renderables.stripe=new this.rendererInstance.elements.Stripe(
-                    this.rendererInstance, 
-                    this.id+"_stripe",  
-                    this.renderables.frame.frameNode, 
-                    ["gradient_"+this.groupObject.identifier]
-                );
-                this.renderables.stripe.create();*/
-    
+
                 //Create element
                 this.renderables.element=new this.rendererInstance.elements.AutocompleteInput(
                     this.rendererInstance, 
@@ -837,7 +822,7 @@ export default class Displays {
             fetcherInstance:DataAPI;
             displayInstance:Displays;
     
-            rawContent:object;
+            rawContent: ActivityReportItem[];
             content:object;
             id:string;
     
@@ -865,49 +850,52 @@ export default class Displays {
                 this.title="Aktiivsus";
                 this.subtitle="Punktid ja tegevused ajas";
             };
-            data():Promise<void>{
-                return this.fetcherInstance.activityReport(this.name, this.group).then(data=>{
-                    this.rawContent=data;
-                    
-                    //series1: [value, value]
-                    //series2: [value, value]
-                    //categories: ["month 'year", "month 'year"]
-                    this.content.colors=['#c2475e', '#108cfd'];
-                    
-                    let series1={
-                        name: 'Punkte',
-                        data: []
-                    };
-                    let series2={
-                        name: 'Tegevusi',
-                        data: []
-                    };
-                    this.content.categories=[];
-                    for(let i=this.rawContent.length-1; i>0; i--) {
-                        series1.data.push(truncate(this.rawContent[i].score));
-                        series2.data.push(truncate(this.rawContent[i].activities));
-                        this.content.categories.push(String(this.rawContent[i].m)+" "+String(this.rawContent[i].y));
-                    }
-                    this.content.series=[series1, series2];
-                    this.content.yaxis=[];
-    
-                    for(let i=0; i<this.content.series.length; i++) {
-                        let opposite=false;
-                        if(i%2) {
-                            opposite=true;
+
+            data(): Promise<void> {
+                return this.fetcherInstance.activityReport(this.name)
+                    .then(data => {
+                        this.rawContent = data;
+
+                        //series1: [value, value]
+                        //series2: [value, value]
+                        //categories: ["month 'year", "month 'year"]
+                        this.content.colors = ['#c2475e', '#108cfd'];
+
+                        let series1 = {
+                            name: 'Punkte',
+                            data: []
+                        };
+                        let series2 = {
+                            name: 'Tegevusi',
+                            data: []
+                        };
+                        this.content.categories = [];
+                        for (let i = 0; i < this.rawContent.length; i++) {
+                            series1.data.push(truncate(this.rawContent[i].score));
+                            series2.data.push(truncate(this.rawContent[i].activities));
+                            this.content.categories.push(String(this.rawContent[i].m) + " " + String(this.rawContent[i].y));
                         }
-                        this.content.yaxis.push({
-                            axisTicks: {
-                                show: true,
-                            },
-                            tooltip: {
-                                enabled: false,
-                            },
-                            seriesName: this.content.series[i].name,
-                            opposite: opposite
-                        });
-                    }
-                });
+
+                        this.content.series = [series1, series2];
+                        this.content.yaxis = [];
+
+                        for (let i = 0; i < this.content.series.length; i++) {
+                            let opposite = false;
+                            if (i % 2) {
+                                opposite = true;
+                            }
+                            this.content.yaxis.push({
+                                axisTicks: {
+                                    show: true,
+                                },
+                                tooltip: {
+                                    enabled: false,
+                                },
+                                seriesName: this.content.series[i].name,
+                                opposite: opposite
+                            });
+                        }
+                    });
             };
             create(){
                 this.renderables={

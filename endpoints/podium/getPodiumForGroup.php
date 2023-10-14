@@ -19,7 +19,9 @@ $conn = SQL_new_session();
 $conn->query("USE `$privateAreaDatabaseName`");
 
 $sql = "
-select CONCAT_WS(' ', IFNULL(I.eesnimi, ''), IFNULL(I.perenimi, '')) as nimi, punktisumma, ROW_NUMBER() over () as koht
+select CONCAT_WS(' ', NULLIF(I.eesnimi, ''), NULLIF(I.perenimi, ''), IF(NULLIF(I.hyydnimi, '') IS NULL, NULL, CONCAT('(', I.hyydnimi, ')'))) as nimi,
+       punktisumma,
+       ROW_NUMBER() over () as koht
 from (select I.isik_id,
              I.eesnimi,
              I.perenimi,

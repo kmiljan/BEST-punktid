@@ -40,7 +40,7 @@ function getTotalPoints(DateTime $start, string $name, string $groupName): int {
     where Ps.punkti_saamise_seisundi_liik_kood = 1
     and min_toimumise_aeg >= ?
     and V.nimetus = ?
-    and CONCAT_WS(' ', IFNULL(I.eesnimi, ''), IFNULL(I.perenimi, '')) = ?;";
+    and CONCAT_WS(' ', NULLIF(I.eesnimi, ''), NULLIF(I.perenimi, ''), IF(NULLIF(I.hyydnimi, '') IS NULL, NULL, CONCAT('(', I.hyydnimi, ')'))) = ?;";
 
     $query = $conn->prepare($sql);
 
