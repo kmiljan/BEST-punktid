@@ -9,7 +9,6 @@ export default function autocomplete(inp, submitAction, changeButtonState, rende
         clearTimeout(lastSearchTimeoutId);
         const thisWrapper = this;
         lastSearchTimeoutId = setTimeout(function () {
-            console.log('running ' + lastSearchTimeoutId);
             /*close any already open lists of autocompleted values*/
             closeAllLists();
             var a, b, i, val = thisWrapper.value;

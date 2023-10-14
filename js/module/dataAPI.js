@@ -2,6 +2,17 @@ import notify from '../module/debug.js';
 export default class DataAPI {
     constructor() { }
     ;
+    getRequest(pathWithQuery) {
+        const url = new URL(pathWithQuery, window.location.origin);
+        return fetch(url, {})
+            .then(res => {
+            return res.json();
+        })
+            .catch(reason => {
+            console.error(`request to url ${pathWithQuery} failed. Reason: ${reason}`);
+            throw "failed request";
+        });
+    }
     requestMethod(URL) {
         return fetch(URL, {}).then(res => {
             if (res.ok) {
@@ -31,18 +42,19 @@ export default class DataAPI {
     }
     ;
     groups() {
-        return this.requestMethod(`/get_data.php?type=groups`);
-    }
-    ;
-    names() {
-        return this.requestMethod(`/cache/namelist.json`).then(arr => {
-            for (let i = 0; i < arr.length; i++) {
-                arr[i] = decodeURIComponent(arr[i]);
+        return this.requestMethod(`/get_data.php?type=groups`)
+            .then(data => {
+            const res = [];
+            for (const group in data) {
+                res.push({
+                    identifier: group,
+                    properties: data[group]
+                });
             }
-            return arr;
+            return res;
         });
+        //TODO return this.getRequest<Group[]>('/api/groups')
     }
-    ;
     personalData(name) {
         name = encodeURI(name);
         return this.requestMethod(`/get_data.php?type=personaldata&person_name=${name}`);

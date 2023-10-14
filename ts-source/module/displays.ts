@@ -2,23 +2,7 @@ import Renderables from "./render";
 import DataAPI from './dataAPI.js';
 import {round, truncate} from './round.js';
 
-interface Group {
-    identifier:string,
-    properties:{
-        name:string,
-        colors:Array<string>
-    }
-}
-/*const groups=[
-    {identifier:'TTG', properties: {name: 'TTG', colors: ["blue", "lightblue"]}},
-    {identifier:'MTG', properties: {name: 'MTG', colors: ["blue", "lightblue"]}},
-    {identifier:'PRTG', properties: {name: 'DMTG', colors: ["#e0bc00", "#fdde10"]}},
-    {identifier:'FRTG', properties: {name: 'FRTG', colors: ["75ae40", "#c3d8a1"]}},
-    {identifier:'RV', properties: {name: 'RV', colors: ["blue", "lightblue"]}},
-    {identifier:'HR_local', properties: {name: 'LBG Tallinn', colors: ["blue", "lightblue"]}},
-    {identifier:'HR_teamwork', properties: {name: 'Tiimitöö', colors: ["blue", "lightblue"]}},
-    {identifier:'HR_projects', properties: {name: 'Projektid', colors: ["blue", "lightblue"]}},
-];*/
+
 
 export default class Displays {
     groups:Array<Group>;
@@ -1170,15 +1154,9 @@ export default class Displays {
 
         this.groups=[];
         return dataAPI.groups().then(
-            (data:Array<Group>)=>{
-                for(const group in data) {
-                    this.groups.push(
-                        {
-                            identifier: group, 
-                            properties: data[group]
-                        }
-                    );
-                };
+            (data:Array<Group>)=> {
+                this.groups = data;
+
                 this.groups.forEach(
                     (groupElement)=>{
                         //Add all style classes you wish to use, here

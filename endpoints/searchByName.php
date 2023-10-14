@@ -15,7 +15,7 @@ if (strlen($userInput) <= 3) {
     return;
 }
 
-$input = '%' . strtolower($_GET['query']) . "%";
+$input = '%' . $userInput . "%";
 
 $conn = SQL_new_session();
 $conn->query("USE `$privateAreaDatabaseName`");
