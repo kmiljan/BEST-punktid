@@ -42,5 +42,12 @@ export enum ReferenceData {
     totalScoreThisMonth = "totalScoreThisMonth"
 }
 
+export interface ActivityItem {
+    name: string,
+    count: number,
+    score: number,
+    timestamp: string
+}
+
 // See on siin selleks, et tsc koodi kokku panemisel tekitaks samanimelise javascript faili
 var _ = "mingi vaartus";

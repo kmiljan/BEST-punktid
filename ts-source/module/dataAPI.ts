@@ -1,5 +1,5 @@
 import notify from '../module/debug.js';
-import {ActivityReportItem, Group, PersonalMetaData, PodiumItem, ReferenceData} from "../types";
+import {ActivityItem, ActivityReportItem, Group, PersonalMetaData, PodiumItem, ReferenceData} from "../types";
 export default class DataAPI {
     constructor(){};
 
@@ -89,7 +89,7 @@ export default class DataAPI {
 
 
         return this.requestMethod(`/get_data.php?type=podium&group=${group}&referencedata=${referenceData}&podiumsize=${podiumSizeString}&exemptBasedOnStatus=${exemptBasedOnStatusString}`);
-    };
+    }
 
     allPodium(podiumSize: number, from: Date|null): Promise<PodiumItem[]> {
         let url = `api/podium/all?podiumsize=${podiumSize}`;
@@ -116,22 +116,12 @@ export default class DataAPI {
         }
 
         return this.getRequest<ActivityReportItem[]>(url);
-    };
-    exempt(name: string):Promise<object> {
-        name=encodeURI(name);
-        return this.requestMethod(`/get_data.php?type=exempt&person_name=${name}`);
-    };
-    lastActivities(name: string|null, group: string|null, amount:number):Promise<object> {
-        group=encodeURI(group);
-        const amountString=encodeURI(String(amount));
-        if (name) {
-            name=encodeURI(name);
-            return this.requestMethod(`/get_data.php?type=lastactivities&person_name=${name}&group=${group}&amount=${amountString}`);
-        }
-        else {
-            return this.requestMethod(`/get_data.php?type=lastactivities&group=${group}&amount=${amountString}`);
-        }
-    };
+    }
+
+    lastActivities(name: string, amount: number): Promise<ActivityItem[]> {
+        return this.getRequest<ActivityItem[]>(`/api/lastActivities?personName=${encodeURI(name)}&count=${amount}`)
+    }
+
     svg(URL){
         return this.requestMethodText(`/resource/${URL}`);
     }
