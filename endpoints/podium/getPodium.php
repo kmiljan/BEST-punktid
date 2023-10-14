@@ -9,7 +9,7 @@ require_once '../../util/time.php';
 
 global $privateAreaDatabaseName;
 
-$podiumSize = intval($_GET['podiumsize']);
+$podiumSize = intval($_GET['podiumsize'] ?? "10");
 $from = isset($_GET['from']) ? new DateTime($_GET['from']) : getMinStartDate();
 $from = $from->format("Y-m-d H:i:s");
 

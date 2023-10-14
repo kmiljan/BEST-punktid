@@ -69,8 +69,6 @@ function queryActivityReport(string|null $personName): array
     global $privateAreaDatabaseName;
     $minDate = (new DateTime('2017-01-01'))->format("Y-m-d");
 
-    $filterQuery = "";
-
     $filterByPerson = $personName != null && $personName != '';
 
     if ($filterByPerson) {
@@ -96,6 +94,7 @@ function queryActivityReport(string|null $personName): array
     ) Pss
     LEFT JOIN Punkti_saamine Ps on Ps.punkti_saamine_id = Pss.punkti_saamine_id
     $filterQuery
+    AND Ps.punkti_saamise_seisundi_liik_kood = 1
     GROUP BY 
         toimumise_aasta,
         toimumise_kuu
