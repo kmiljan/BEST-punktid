@@ -35,19 +35,18 @@ FROM Punkti_saamine Ps
 WHERE Ps.punkti_saamise_seisundi_liik_kood = 1
     AND CONCAT_WS(' ', NULLIF(I.eesnimi, ''), NULLIF(I.perenimi, ''), IF(NULLIF(I.hyydnimi, '') IS NULL, NULL, CONCAT('(', I.hyydnimi, ')'))) = ?
 ORDER BY Pss.punkti_saamise_aeg desc
-LIMIT ?
-";
+LIMIT ?";
 
 $conn = SQL_new_session();
 $conn->query("USE `$privateAreaDatabaseName`");
-$query=$conn->prepare($sql);
+$query = $conn->prepare($sql);
 $query->bind_param('si', $name, $count);
 
 $query->execute();
 
 $queryResult = $query->get_result()->fetch_all();
 
-$apiResponse = array_map(fn($row) => [
+$apiResponse = array_map(fn(array $row) => [
     'name' => $row[0],
     'count' => $row[1],
     'score' => intval($row[2]),

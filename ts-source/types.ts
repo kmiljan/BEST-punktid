@@ -49,5 +49,18 @@ export interface ActivityItem {
     timestamp: string
 }
 
+export interface PersonalDataResponse {
+    [groupName: string]: {
+        totalScore: number,
+        breakdown: PersonalDataActivityItem[]
+    }
+}
+
+interface PersonalDataActivityItem {
+    name: string,
+    count: number,
+    score: number
+}
+
 // See on siin selleks, et tsc koodi kokku panemisel tekitaks samanimelise javascript faili
 var _ = "mingi vaartus";

@@ -1,4 +1,3 @@
-import notify from '../module/debug.js';
 export default class DataAPI {
     constructor() { }
     ;
@@ -13,26 +12,6 @@ export default class DataAPI {
             throw "failed request";
         });
     }
-    requestMethod(URL) {
-        return fetch(URL, {}).then(res => {
-            if (res.ok) {
-                return res.text();
-            }
-        }).then(str => {
-            return new Promise((resolve, reject) => {
-                let data;
-                try {
-                    data = JSON.parse(str);
-                    resolve(data);
-                }
-                catch (e) {
-                    notify("Request to URL: " + URL + " came back with \n" + str, "request");
-                    reject(e);
-                }
-            });
-        });
-    }
-    ;
     requestMethodText(pathWithQuery) {
         const url = new URL(pathWithQuery, window.location.origin);
         return fetch(url, {})
@@ -49,8 +28,7 @@ export default class DataAPI {
         return this.getRequest('/api/groups');
     }
     personalData(name) {
-        name = encodeURI(name);
-        return this.requestMethod(`/get_data.php?type=personaldata&person_name=${name}`);
+        return this.getRequest(`/api/personalData?personName=${encodeURI(name)}`);
     }
     personalStatus(name) {
         return this.getRequest(`/api/personalStatus?personName=${encodeURI(name)}`);

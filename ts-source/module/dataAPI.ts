@@ -1,5 +1,13 @@
 import notify from '../module/debug.js';
-import {ActivityItem, ActivityReportItem, Group, PersonalMetaData, PodiumItem, ReferenceData} from "../types";
+import {
+    ActivityItem,
+    ActivityReportItem,
+    Group,
+    PersonalDataResponse,
+    PersonalMetaData,
+    PodiumItem,
+    ReferenceData
+} from "../types";
 export default class DataAPI {
     constructor(){};
 
@@ -14,31 +22,6 @@ export default class DataAPI {
                 throw "failed request";
             });
     }
-
-
-    requestMethod(URL: string):Promise<object> {
-        return fetch(URL, {}).then(
-            res=>{
-                if(res.ok){
-                    return res.text();
-                }
-            }
-        ).then(str=>{
-            return new Promise(
-                (resolve, reject)=>{
-                    let data;
-                    try{
-                        data=JSON.parse(str);
-                        resolve(data);
-                    }
-                    catch(e){
-                        notify("Request to URL: "+URL+" came back with \n"+str, "request");
-                        reject(e);
-                    }
-                }
-            )
-        });
-    };
 
     requestMethodText(pathWithQuery: string): Promise<string> {
         const url = new URL(pathWithQuery, window.location.origin);
@@ -57,9 +40,8 @@ export default class DataAPI {
         return this.getRequest<Group[]>('/api/groups')
     }
 
-    personalData(name: string): Promise<object> {
-        name = encodeURI(name);
-        return this.requestMethod(`/get_data.php?type=personaldata&person_name=${name}`);
+    personalData(name: string): Promise<PersonalDataResponse> {
+        return this.getRequest<PersonalDataResponse>(`/api/personalData?personName=${encodeURI(name)}`);
     }
 
     personalStatus(name: string): Promise<string> {

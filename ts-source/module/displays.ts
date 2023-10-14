@@ -1,7 +1,7 @@
 import Renderables from "./render";
 import DataAPI from './dataAPI.js';
 import {round, truncate} from './round.js';
-import {ActivityReportItem, Group, PodiumItem, ReferenceData} from "../types";
+import {ActivityReportItem, Group, PersonalDataResponse, PodiumItem, ReferenceData} from "../types";
 
 
 export default class Displays {
@@ -185,7 +185,7 @@ export default class Displays {
             fetcherInstance:DataAPI;
             displayInstance:Displays;
 
-            rawContent:object;
+            rawContent:PersonalDataResponse;
             content:object;
             id:string;
             classes:Array<string>;
@@ -207,25 +207,28 @@ export default class Displays {
                 this.renderIfDataIsEmpty=renderIfDataIsEmpty;
                 this.dataIsEmpty=false;
             };
-            data():Promise<void>{
-                return this.fetcherInstance.personalData(this.name).then(data=>{
-                    this.rawContent=data;
 
-                    this.content.list=[];
-                    if (this.rawContent[this.group].breakdown.length==0){
-                        this.dataIsEmpty=true;
-                    }
-                    this.content.totalScore=this.rawContent[this.group].totalScore;
-                    this.rawContent[this.group].breakdown.forEach(activity=>{
-                        this.content.list.push({
-                            activity: activity.name,
-                            repeats: activity.count,
-                            value: activity.score
+            data(): Promise<void> {
+                return this.fetcherInstance.personalData(this.name)
+                    .then(data => {
+                        this.rawContent = data;
+
+                        this.content.list = [];
+                        if (this.rawContent[this.group].breakdown.length == 0) {
+                            this.dataIsEmpty = true;
+                        }
+                        this.content.totalScore = this.rawContent[this.group].totalScore;
+                        this.rawContent[this.group].breakdown.forEach(activity => {
+                            this.content.list.push({
+                                activity: activity.name,
+                                repeats: activity.count,
+                                value: activity.score
+                            });
                         });
+                        this.content.total = this.rawContent[this.group].totalScore;
                     });
-                    this.content.total=this.rawContent[this.group].totalScore;
-                });
-            };
+            }
+
             create(){
                 this.renderables={
                     frame: new this.rendererInstance.frames.DashboardElementFrame(this.rendererInstance, this.id+"_f",  this.parentNode, [])

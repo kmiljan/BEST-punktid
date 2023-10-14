@@ -151,7 +151,8 @@ export default class Displays {
             }
             ;
             data() {
-                return this.fetcherInstance.personalData(this.name).then(data => {
+                return this.fetcherInstance.personalData(this.name)
+                    .then(data => {
                     this.rawContent = data;
                     this.content.list = [];
                     if (this.rawContent[this.group].breakdown.length == 0) {
@@ -168,7 +169,6 @@ export default class Displays {
                     this.content.total = this.rawContent[this.group].totalScore;
                 });
             }
-            ;
             create() {
                 this.renderables = {
                     frame: new this.rendererInstance.frames.DashboardElementFrame(this.rendererInstance, this.id + "_f", this.parentNode, [])
