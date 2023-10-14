@@ -227,6 +227,7 @@ export default class Renderables {
                     this.content={top: top, bottom: bottom};
                 };
                 render():void{
+                    console.log({id: this.id})
                     this.parentNode.querySelector(`#${this.id+"_p1"}`).innerText=this.content.top;
                     this.parentNode.querySelector(`#${this.id+"_p2"}`).innerText=this.content.bottom;
                 };

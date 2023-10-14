@@ -202,7 +202,7 @@ export default class Displays {
                 this.group=group;
                 this.groupObject=displayInstance.getGroupObject(group);
                 this.parentNode=parentNode;
-                this.id="d_p_groupbreakdown_"+this.group;
+                this.id="d_p_groupbreakdown_"+this.group.replace(" ", "_");
                 this.content={};
                 this.renderIfDataIsEmpty=renderIfDataIsEmpty;
                 this.dataIsEmpty=false;
