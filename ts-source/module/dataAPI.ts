@@ -57,9 +57,8 @@ export default class DataAPI {
         name=encodeURI(name);
         return this.requestMethod(`/get_data.php?type=personaldata&person_name=${name}`);
     };
-    personalStatus(name: string):Promise<object> {
-        name=encodeURI(name);
-        return this.requestMethod(`/get_data.php?type=personalstatus&person_name=${name}`);
+    personalStatus(name: string):Promise<string> {
+        return this.getRequest<string>(`/api/personalStatus?personName=${encodeURI(name)}`);
     };
     personalMetadata(name: string):Promise<PersonalMetaData> {
         name=encodeURI(name);

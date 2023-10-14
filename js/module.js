@@ -35,8 +35,6 @@ function personalDisplays(name) {
         yield splash.run();
         const frame_warning = new renderables.frames.WideFrame(renderables, 'frame_warning', document.getElementById('screenWrapper'), []);
         yield frame_warning.create();
-        let warning = new displays.ExemptionWarning(renderables, dataAPI, displays, name, frame_warning.elementNode);
-        yield warning.run();
         const frame_dash = new renderables.frames.DashboardFrame(renderables, 'frame_dash', document.getElementById('screenWrapper'), []);
         yield frame_dash.create();
         let personalPointsTotal = new displays.personalPointsTotal(renderables, dataAPI, displays, name, frame_dash.elementNode);

@@ -1,4 +1,3 @@
-import notify from './module/debug.js';
 import DataAPI from './module/dataAPI.js';
 import Renderables from './module/render.js';
 import Displays from './module/displays.js';
@@ -31,9 +30,6 @@ async function personalDisplays(name:string) {
 
     const frame_warning=new renderables.frames.WideFrame(renderables, 'frame_warning', document.getElementById('screenWrapper'), []);
     await frame_warning.create();
-    let warning=new displays.ExemptionWarning(renderables, dataAPI, displays,  name, frame_warning.elementNode);
-    await warning.run();
-    
     const frame_dash=new renderables.frames.DashboardFrame(renderables, 'frame_dash', document.getElementById('screenWrapper'), []);
     await frame_dash.create();
     let personalPointsTotal=new displays.personalPointsTotal(renderables, dataAPI, displays,  name, frame_dash.elementNode);

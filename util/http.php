@@ -9,3 +9,9 @@ use JetBrains\PhpStorm\NoReturn;
     exit;
 }
 
+#[NoReturn] function notFound(string $item): void
+{
+    http_response_code(404);
+    echo json_encode(array('item' => $item));
+    exit;
+}

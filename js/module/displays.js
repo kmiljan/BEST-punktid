@@ -658,41 +658,6 @@ export default class Displays {
                 });
             }
         };
-        this.ExemptionWarning = class {
-            constructor(rendererInstance, fetcherInstance, displayInstance, name, parentNode) {
-                this.rendererInstance = rendererInstance;
-                this.fetcherInstance = fetcherInstance;
-                this.displayInstance = displayInstance;
-                this.name = name;
-                this.parentNode = parentNode;
-                this.id = "d_p_exemptionwarning";
-                this.content = {};
-            }
-            ;
-            data() {
-                return this.fetcherInstance.exempt(this.name).then(data => {
-                    this.content.value = data.value;
-                });
-            }
-            ;
-            create() {
-                if (this.content.value === true || this.content.value === 'true') {
-                    this.renderables = {
-                        frame: new this.rendererInstance.frames.WarningFrame(this.rendererInstance, this.id + "_f", this.parentNode, [])
-                    };
-                    this.renderables.frame.create();
-                    //Create element
-                    this.renderables.header = new this.rendererInstance.elements.Warning(this.rendererInstance, this.id + "_title", this.renderables.frame.frameNode, []);
-                    this.renderables.header.data("Sinu staatuse tõttu ei arvestata sinu punkte jooksvates punktitabelites");
-                    this.renderables.header.create();
-                }
-            }
-            run() {
-                return this.data().then(() => {
-                    this.create();
-                });
-            }
-        };
         this.ActivityChartOverall = class extends this.ActivityChart {
             constructor(rendererInstance, fetcherInstance, displayInstance, renderIfDataIsEmpty, parentNode) {
                 super(rendererInstance, fetcherInstance, displayInstance, null, 'all', renderIfDataIsEmpty, parentNode);
@@ -718,12 +683,13 @@ export default class Displays {
                     person_score: 14000,
                     icon: undefined
                 };
-                return this.fetcherInstance.podium('all', 'totalScore', 1, false).then(data => {
+                return this.fetcherInstance.allPodium(1, null)
+                    .then(data => {
                     this.content.top_score = data[0].score;
                 }).then(() => {
-                    return this.fetcherInstance.placement('all', this.name, false, 'totalScore');
+                    return this.fetcherInstance.placementBetter(this.name, ReferenceData.totalScore);
                 }).then(data => {
-                    this.content.person_score = data[0].score;
+                    this.content.person_score = data.score;
                     //Calculate result
                     /*this is the first "actual" arithmetic I've done on this front-end, where
                     I've already written about a thousand lines.
@@ -731,9 +697,9 @@ export default class Displays {
                     this.content.placement = this.content.person_score / this.content.top_score;
                 }).then(() => {
                     return this.fetcherInstance.personalStatus(this.name);
-                }).then(data => {
-                    if (data.status != undefined) {
-                        this.content.status = data.status;
+                }).then(status => {
+                    if (status) {
+                        this.content.status = status;
                     }
                 }).then(() => {
                     return this.fetcherInstance.svg('best_icon_filtered.svg');
@@ -748,48 +714,6 @@ export default class Displays {
                 };
                 this.renderables.element.data(this.name, this.content.status, this.content.placement, this.content.icon);
                 this.renderables.element.create();
-                /*
-                            //Create title
-                            this.renderables.header=new this.rendererInstance.elements.ElementTitle(
-                                this.rendererInstance,
-                                this.id+"_title",
-                                this.renderables.frame.frameNode,
-                                []
-                            );
-                            this.renderables.header.data(this.groupObject.properties.name, "Töögrupi ülevaade");
-                            this.renderables.header.create();
-                
-                            //Create total
-                            this.renderables.total=new this.rendererInstance.elements.Value(
-                                this.rendererInstance,
-                                this.id+"_total",
-                                this.renderables.frame.frameNode,
-                                ["colored-text_"+this.groupObject.identifier]
-                            );
-                            this.renderables.total.data(this.content.totalScore);
-                            this.renderables.total.create();
-                
-                            //Create stripe
-                            this.renderables.stripe=new this.rendererInstance.elements.Stripe(
-                                this.rendererInstance,
-                                this.id+"_stripe",
-                                this.renderables.frame.frameNode,
-                                ["gradient_"+this.groupObject.identifier]
-                            );
-                            this.renderables.stripe.data(this.groupObject.properties.colors);
-                            this.renderables.stripe.create();
-                
-                            //Create element
-                            this.renderables.element=new this.rendererInstance.elements.ActivityList(
-                                this.rendererInstance,
-                                this.id+"_content",
-                                this.renderables.frame.frameNode,
-                                []
-                            );
-                            this.renderables.element.data(this.content.list);
-                            this.renderables.element.create();
-                
-                        */
             }
             run() {
                 return this.data().then(() => {

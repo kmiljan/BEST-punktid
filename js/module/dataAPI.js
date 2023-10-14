@@ -50,8 +50,7 @@ export default class DataAPI {
     }
     ;
     personalStatus(name) {
-        name = encodeURI(name);
-        return this.requestMethod(`/get_data.php?type=personalstatus&person_name=${name}`);
+        return this.getRequest(`/api/personalStatus?personName=${encodeURI(name)}`);
     }
     ;
     personalMetadata(name) {
