@@ -48,6 +48,10 @@ export default class DataAPI {
         }
         return this.getRequest(url);
     }
+    bestInGroups(referenceData) {
+        const url = `api/podium/getBestInGroups?referenceData=${referenceData}`;
+        return this.getRequest(url);
+    }
     groupPodium(group, podiumSize, from) {
         let url = `api/podium/group/allTime?group=${encodeURI(group)}&podiumsize=${podiumSize}`;
         if (from !== null) {

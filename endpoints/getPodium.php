@@ -3,13 +3,13 @@ header('Content-Type: text/json; charset=utf-8');
 header('Cache-Control: no-cache, no-store, must-revalidate');
 mb_internal_encoding("UTF-8");
 
-require_once '../../host/host.php';
-require_once '../../util/SQL_session.php';
-require_once '../../util/time.php';
+require_once('../host/host.php');
+require_once('../util/SQL_session.php');
+require_once '../util/time.php';
+
 global $privateAreaDatabaseName;
 
-$group = $_GET['group'];
-$podiumSize = intval($_GET['podiumsize']);
+$podiumSize = intval($_GET['podiumsize'] ?? "10");
 $from = isset($_GET['from']) ? new DateTime($_GET['from']) : getMinStartDate();
 $from = $from->format("Y-m-d H:i:s");
 
@@ -35,7 +35,6 @@ from (select I.isik_id,
                           group by PssInner.punkti_saamine_id) Pss
                          on Ps.punkti_saamine_id = Pss.punkti_saamine_id
       where Ps.punkti_saamise_seisundi_liik_kood = 1
-        and V.nimetus = ?
         and min_toimumise_aeg >= ?
       GROUP BY I.isik_id
       ) as isik_punktiga
@@ -45,11 +44,11 @@ order by punktisumma desc
 LIMIT ?
 ";
 
-$query=$conn->prepare($sql);
-$query->bind_param('ssi', $group, $from, $podiumSize);
+$query = $conn->prepare($sql);
+$query->bind_param('si', $from, $podiumSize);
 $query->execute();
 
-$result=$query->get_result()->fetch_all();
+$result = $query->get_result()->fetch_all();
 
 $apiResponse = array_map(fn($item) => [
     'name' => $item[0],

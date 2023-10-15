@@ -1,7 +1,7 @@
 import notify from '../module/debug.js';
 import {
     ActivityItem,
-    ActivityReportItem,
+    ActivityReportItem, BestInGroupItem,
     Group,
     PersonalDataResponse,
     PersonalMetaData,
@@ -66,6 +66,11 @@ export default class DataAPI {
         }
 
         return this.getRequest<PodiumItem[]>(url);
+    }
+
+    bestInGroups(referenceData: string): Promise<BestInGroupItem[]> {
+        const url = `api/podium/getBestInGroups?referenceData=${referenceData}`;
+        return this.getRequest<BestInGroupItem[]>(url);
     }
 
     groupPodium(group: string, podiumSize: number, from: Date|null): Promise<PodiumItem[]> {

@@ -4,10 +4,10 @@ header('Content-Type: text/json; charset=utf-8');
 header('Cache-Control: no-cache, no-store, must-revalidate');
 mb_internal_encoding("UTF-8");
 
-require_once('../../host/host.php');
-require_once('../../util/SQL_session.php');
-require_once '../../util/http.php';
-require_once '../../util/time.php';
+require_once('../host/host.php');
+require_once('../util/SQL_session.php');
+require_once '../util/http.php';
+require_once '../util/time.php';
 
 global $privateAreaDatabaseName;
 

@@ -329,36 +329,28 @@ export default class Displays {
                 this.content.list=[];
                 let requests=[];
                 let metadata=[];
-                this.displayInstance.groups.forEach((group)=>{
-                    metadata.push({name: group.properties.name, identifier: group.identifier});
-                    const fromTime = this.referenceData === "totalScoreThisMonth" ?
-                        new Date(2023, 4, 1) :
-                        null;
 
-                    requests.push(this.fetcherInstance.groupPodium(group.identifier, 1, fromTime));
-                });
-                return Promise.all(requests).then(
-                    (data)=>{
-
-                        data.forEach(
-                            (groupLeaderList, index)=>{
-                                if(groupLeaderList[0].score>0) {
-                                    this.dataIsEmpty=false;
-                                    this.content.list.push(
-                                        {
-                                            group: metadata[index].name,
-                                            name: groupLeaderList[0].name,
-                                            value: groupLeaderList[0].score,
-                                            classes: [
-                                                "color-vars_"+metadata[index].identifier
-                                            ]
-                                        }
-                                    )
-                                }
+                return this.fetcherInstance.bestInGroups(this.referenceData)
+                    .then(result => {
+                        for (let i = 0; i < result.length; i++) {
+                            const item = result[i];
+                            if (item.score <= 0) {
+                                continue;
                             }
-                        )
-                    }
-                )
+
+                            this.dataIsEmpty = false;
+                            this.content.list.push(
+                                {
+                                    group: item.groupName,
+                                    name: item.name,
+                                    value: item.score,
+                                    classes: [
+                                        "color-vars_" + item.groupIdentifier
+                                    ]
+                                }
+                            )
+                        }
+                    });
             };
             create(){
                 this.renderables={
