@@ -1,7 +1,7 @@
 import Renderables from "./render";
 import DataAPI from './dataAPI.js';
 import {round, truncate} from './round.js';
-import {ActivityReportItem, Group, PersonalDataResponse, PersonalMetaData, PodiumItem, ReferenceData} from "../types";
+import {ActivityReportItem, Group, PersonalDataResponse, PersonalMetaData, PodiumItem, ReferenceData} from "../types.js";
 
 
 export default class Displays {

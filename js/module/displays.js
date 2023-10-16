@@ -1,5 +1,5 @@
 import { round, truncate } from './round.js';
-import { ReferenceData } from "../types";
+import { ReferenceData } from "../types.js";
 export default class Displays {
     constructor() {
         //this.personalPointsTotal=personalPointsTotal;
