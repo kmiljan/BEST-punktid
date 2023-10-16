@@ -1,6 +1,5 @@
 <?php
 
-
 require_once '../host/host.php';
 require_once '../util/SQL_session.php';
 
