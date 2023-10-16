@@ -47,12 +47,10 @@ function personalDisplays(name) {
         yield personalPointsMonth.run();
         let personalGroupContributions = new displays.personalGroupContributions(renderables, dataAPI, displays, name, false, frame_dash.elementNode);
         yield personalGroupContributions.run();
-        let groupdatabreakdowns = [];
-        displays.groups.forEach((group) => {
+        for (const group of displays.groups) {
             const dp_obj = new displays.personalGroupBreakdown(renderables, dataAPI, displays, name, group.identifier, false, frame_dash.elementNode);
-            dp_obj.run();
-            groupdatabreakdowns.push = dp_obj;
-        });
+            yield dp_obj.run();
+        }
         const frame_bottom = new renderables.frames.DashboardFrameWide(renderables, 'frame_bottom', document.getElementById('screenWrapper'), []);
         yield frame_bottom.create();
         let activityGraph = new displays.ActivityChart(renderables, dataAPI, displays, name, 'all', true, frame_bottom.elementNode);

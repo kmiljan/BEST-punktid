@@ -43,15 +43,10 @@ async function personalDisplays(name:string) {
     let personalGroupContributions=new displays.personalGroupContributions(renderables, dataAPI, displays,  name, false, frame_dash.elementNode);
     await personalGroupContributions.run();
 
-    let groupdatabreakdowns=[];
-    displays.groups.forEach(
-        (group)=>{
-            const dp_obj=new displays.personalGroupBreakdown(renderables, dataAPI, displays,  name, group.identifier, false, frame_dash.elementNode);
-            dp_obj.run();
-            groupdatabreakdowns.push=dp_obj;
-            
-        }
-    )
+    for (const group of displays.groups) {
+        const dp_obj=new displays.personalGroupBreakdown(renderables, dataAPI, displays,  name, group.identifier, false, frame_dash.elementNode);
+        await dp_obj.run();
+    }
 
     const frame_bottom=new renderables.frames.DashboardFrameWide(renderables, 'frame_bottom', document.getElementById('screenWrapper'), []);
     await frame_bottom.create();

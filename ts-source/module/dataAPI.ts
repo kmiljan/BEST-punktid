@@ -11,7 +11,10 @@ import {
 } from "../types";
 
 export default class DataAPI {
-    constructor(){};
+    constructor(){
+        this.cache = {};
+    };
+    cache: {[key: string]: any}
 
     getRequest<TResponse>(pathWithQuery: string): Promise<TResponse> {
         const url = new URL(pathWithQuery, window.location.origin);
@@ -42,8 +45,16 @@ export default class DataAPI {
         return this.getRequest<Group[]>('/api/groups')
     }
 
-    personalData(name: string): Promise<PersonalDataResponse> {
-        return this.getRequest<PersonalDataResponse>(`/api/personalData?personName=${encodeURI(name)}`);
+    async personalData(name: string): Promise<PersonalDataResponse> {
+        const cached = this.cache[`personalData-${name}`];
+
+        if (cached) {
+            return cached;
+        }
+
+        const response = await this.getRequest<PersonalDataResponse>(`/api/personalData?personName=${encodeURI(name)}`);
+        this.cache[`personalData-${name}`] = response;
+        return response;
     }
 
     personalStatus(name: string): Promise<string> {
