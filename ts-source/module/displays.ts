@@ -1,7 +1,7 @@
 import Renderables from "./render";
 import DataAPI from './dataAPI.js';
 import {round, truncate} from './round.js';
-import {ActivityReportItem, Group, PersonalDataResponse, PodiumItem, ReferenceData} from "../types";
+import {ActivityReportItem, Group, PersonalDataResponse, PersonalMetaData, PodiumItem, ReferenceData} from "../types";
 
 
 export default class Displays {
@@ -441,7 +441,7 @@ export default class Displays {
             title:string;
             subtitle:string;
             exemptBasedOnStatus: boolean;
-            referenceData: string;
+            referenceData: ReferenceData;
             frameClasses: Array<string>;
             constructor(rendererInstance:Renderables, fetcherInstance:DataAPI, displayInstance:Displays, renderIfDataIsEmpty:boolean, parentNode:HTMLElement){
                 this.rendererInstance=rendererInstance;
@@ -454,7 +454,7 @@ export default class Displays {
                 this.dataIsEmpty=false;
 
                 this.id="d_p_periodleaders_month";
-                this.referenceData="totalScoreThisMonth";
+                this.referenceData= ReferenceData.totalScoreThisMonth;
                 this.title="Käesolev kuu";
                 this.subtitle="Koondpunktid";
                 this.exemptBasedOnStatus=true;
@@ -463,55 +463,42 @@ export default class Displays {
             data():Promise<void>{
                 this.content.list=[];
                 let podium=[];
-                let personalRequests=[] as Promise<PersonalMetaData>[];
-                const fromTime = this.referenceData === "totalScoreThisMonth" ?
-                    new Date(2023, 4, 1) :
-                    null;
-
-                return this.fetcherInstance.allPodium(7, fromTime)
+                return this.fetcherInstance.allPodium(7, this.referenceData)
                     .then(data => {
-                        for(let i=0; i<data.length; i++) {
-                            podium.push(data[i].name);
-                            personalRequests.push(this.fetcherInstance.personalMetadata(data[i].name));
-                        }
-                        return Promise.all(personalRequests);
-                    })
-                .then(
-                    (personalGroupBreakdownList)=>{
-                        let series=[];
-                        let colors=[];
-                        for (let j=0; j<this.displayInstance.groups.length; j++) {
-                            series[j]={
+                        podium = data.map(x => x.name);
+                        let series = [];
+                        let colors = [];
+                        for (let j = 0; j < this.displayInstance.groups.length; j++) {
+                            series[j] = {
                                 name: this.displayInstance.groups[j].properties.name,
                                 data: []
                             };
                             colors.push(this.displayInstance.groups[j].properties.colors[1]);
                         }
-                        for(let i=0; i<personalGroupBreakdownList.length; i++) {
-                            if(this.displayInstance.groups.reduce((total, group)=>{
-                                return total+personalGroupBreakdownList[i][group.identifier][this.referenceData];
-                            },
-                            0)
-                            <=0) {
-                                if(i==0) {
-                                    this.dataIsEmpty=true;
-                                }
+
+                        for (let i = 0; i < data.length; i++) {
+                            const currentPerson = data[i];
+
+                            if (0 >= currentPerson.metadata.reduce((total, item) => total + item.score)) {
+                                this.dataIsEmpty = true
                                 break;
                             }
-                            for (let j=0; j<this.displayInstance.groups.length; j++) {
-                                series[j].data.push(personalGroupBreakdownList[i][this.displayInstance.groups[j].identifier][this.referenceData]);
+
+                            for (let j = 0; j < this.displayInstance.groups.length; j++) {
+                                const currentIdentifier = this.displayInstance.groups[j].identifier;
+                                const currentPersonMetadata = currentPerson.metadata.find(x => x.groupName === currentIdentifier);
+                                if (!currentPersonMetadata) {
+                                    series[j].data.push(0);
+                                    continue;
+                                }
+                                series[j].data.push(currentPersonMetadata.score);
                             }
 
                         }
                         this.content.series=series;
                         this.content.categories=podium;
                         this.content.colors=colors;
-                        //If the first place has no points, it must be because no-one has points this <period>
-                        /*if(series[0].data.reduce((total, groupPoints)=>{return total+=groupPoints}, 0)<=0) {
-                            this.dataIsEmpty=true;
-                        }*/
-                    }
-                )
+                    })
             };
             create(){
                 this.renderables={
@@ -577,7 +564,7 @@ export default class Displays {
                 super(rendererInstance, fetcherInstance, displayInstance, renderIfDataIsEmpty, parentNode);
 
                 this.id="d_p_periodleaders_alltime";
-                this.referenceData="totalScore";
+                this.referenceData=ReferenceData.totalScore;
                 this.title="Läbi aegade";
                 this.subtitle="Koondpunktid";
                 this.exemptBasedOnStatus=false;
@@ -989,7 +976,7 @@ export default class Displays {
                     icon: undefined
                 }
 
-                return this.fetcherInstance.allPodium(1, null)
+                return this.fetcherInstance.allPodium(1, ReferenceData.totalScore)
                     .then(data => {
                             this.content.top_score = data[0].score;
                         }

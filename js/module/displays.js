@@ -305,7 +305,7 @@ export default class Displays {
                 this.renderIfDataIsEmpty = renderIfDataIsEmpty;
                 this.dataIsEmpty = false;
                 this.id = "d_p_periodleaders_month";
-                this.referenceData = "totalScoreThisMonth";
+                this.referenceData = ReferenceData.totalScoreThisMonth;
                 this.title = "Käesolev kuu";
                 this.subtitle = "Koondpunktid";
                 this.exemptBasedOnStatus = true;
@@ -315,19 +315,9 @@ export default class Displays {
             data() {
                 this.content.list = [];
                 let podium = [];
-                let personalRequests = [];
-                const fromTime = this.referenceData === "totalScoreThisMonth" ?
-                    new Date(2023, 4, 1) :
-                    null;
-                return this.fetcherInstance.allPodium(7, fromTime)
+                return this.fetcherInstance.allPodium(7, this.referenceData)
                     .then(data => {
-                    for (let i = 0; i < data.length; i++) {
-                        podium.push(data[i].name);
-                        personalRequests.push(this.fetcherInstance.personalMetadata(data[i].name));
-                    }
-                    return Promise.all(personalRequests);
-                })
-                    .then((personalGroupBreakdownList) => {
+                    podium = data.map(x => x.name);
                     let series = [];
                     let colors = [];
                     for (let j = 0; j < this.displayInstance.groups.length; j++) {
@@ -337,27 +327,25 @@ export default class Displays {
                         };
                         colors.push(this.displayInstance.groups[j].properties.colors[1]);
                     }
-                    for (let i = 0; i < personalGroupBreakdownList.length; i++) {
-                        if (this.displayInstance.groups.reduce((total, group) => {
-                            return total + personalGroupBreakdownList[i][group.identifier][this.referenceData];
-                        }, 0)
-                            <= 0) {
-                            if (i == 0) {
-                                this.dataIsEmpty = true;
-                            }
+                    for (let i = 0; i < data.length; i++) {
+                        const currentPerson = data[i];
+                        if (0 >= currentPerson.metadata.reduce((total, item) => total + item.score)) {
+                            this.dataIsEmpty = true;
                             break;
                         }
                         for (let j = 0; j < this.displayInstance.groups.length; j++) {
-                            series[j].data.push(personalGroupBreakdownList[i][this.displayInstance.groups[j].identifier][this.referenceData]);
+                            const currentIdentifier = this.displayInstance.groups[j].identifier;
+                            const currentPersonMetadata = currentPerson.metadata.find(x => x.groupName === currentIdentifier);
+                            if (!currentPersonMetadata) {
+                                series[j].data.push(0);
+                                continue;
+                            }
+                            series[j].data.push(currentPersonMetadata.score);
                         }
                     }
                     this.content.series = series;
                     this.content.categories = podium;
                     this.content.colors = colors;
-                    //If the first place has no points, it must be because no-one has points this <period>
-                    /*if(series[0].data.reduce((total, groupPoints)=>{return total+=groupPoints}, 0)<=0) {
-                        this.dataIsEmpty=true;
-                    }*/
                 });
             }
             ;
@@ -407,7 +395,7 @@ export default class Displays {
             constructor(rendererInstance, fetcherInstance, displayInstance, renderIfDataIsEmpty, parentNode) {
                 super(rendererInstance, fetcherInstance, displayInstance, renderIfDataIsEmpty, parentNode);
                 this.id = "d_p_periodleaders_alltime";
-                this.referenceData = "totalScore";
+                this.referenceData = ReferenceData.totalScore;
                 this.title = "Läbi aegade";
                 this.subtitle = "Koondpunktid";
                 this.exemptBasedOnStatus = false;
@@ -678,7 +666,7 @@ export default class Displays {
                     person_score: 14000,
                     icon: undefined
                 };
-                return this.fetcherInstance.allPodium(1, null)
+                return this.fetcherInstance.allPodium(1, ReferenceData.totalScore)
                     .then(data => {
                     this.content.top_score = data[0].score;
                 }).then(() => {

@@ -29,6 +29,19 @@ export interface BestInGroupItem {
     groupIdentifier: string
 }
 
+export interface PodiumItemOptimized {
+    score: number,
+    name: string,
+    place: number,
+    metadata: PodiumItemMetaData[]
+}
+
+export interface PodiumItemMetaData {
+    groupName: string,
+    groupIdentifier: string,
+    score: number
+}
+
 export interface PersonalMetaData {
     [name: string]: PersonalMetaDataItem
 }

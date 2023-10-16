@@ -8,36 +8,21 @@ require_once('../host/host.php');
 require_once('../util/SQL_session.php');
 require_once '../util/http.php';
 require_once '../util/time.php';
+require_once '../util/referenceData.php';
 
 global $privateAreaDatabaseName;
 
 $personName = $_GET['personName'] ?? null;
 $referenceData = $_GET['referenceData'] ?? null;
 
-if ($personName == null) {
-    badRequest("Invalid person name");
-}
+$minDate = getDateFromReferenceData($referenceData);
 
-if ($referenceData == null || ReferenceData::fromName($referenceData) == null) {
+if ($minDate == null) {
     badRequest('Invalid reference data');
 }
 
-$referenceData = ReferenceData::fromName($referenceData);
-$minDate = null;
-
-switch ($referenceData) {
-    case ReferenceData::totalScore:
-        $minDate = getMinStartDate();
-        break;
-    case ReferenceData::totalScoreThisMonth:
-        $minDate = getMonthStartDate();
-        break;
-    case ReferenceData::totalScoreThisSeason:
-        $minDate = getSeasonStartDate();
-        break;
-    default:
-        badRequest("Invalid reference data");
-        break;
+if ($personName == null) {
+    badRequest("Invalid person name");
 }
 
 $minDate = $minDate->format("Y-m-d H:i:s");

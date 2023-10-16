@@ -1,13 +1,15 @@
-import notify from '../module/debug.js';
 import {
     ActivityItem,
-    ActivityReportItem, BestInGroupItem,
+    ActivityReportItem,
+    BestInGroupItem,
     Group,
     PersonalDataResponse,
     PersonalMetaData,
     PodiumItem,
+    PodiumItemOptimized,
     ReferenceData
 } from "../types";
+
 export default class DataAPI {
     constructor(){};
 
@@ -59,26 +61,14 @@ export default class DataAPI {
         return this.getRequest<PodiumItem>(url);
     }
 
-    allPodium(podiumSize: number, from: Date|null): Promise<PodiumItem[]> {
-        let url = `api/podium/all?podiumsize=${podiumSize}`;
-        if (from !== null) {
-            url += `&from=${from.toISOString()}`
-        }
-
-        return this.getRequest<PodiumItem[]>(url);
+    allPodium(podiumSize: number, referenceData: ReferenceData): Promise<PodiumItemOptimized[]> {
+        const url = `/api/podium/all?podiumSize=${podiumSize}&referenceData=${referenceData}`;
+        return this.getRequest<PodiumItemOptimized[]>(url);
     }
 
     bestInGroups(referenceData: string): Promise<BestInGroupItem[]> {
         const url = `api/podium/getBestInGroups?referenceData=${referenceData}`;
         return this.getRequest<BestInGroupItem[]>(url);
-    }
-
-    groupPodium(group: string, podiumSize: number, from: Date|null): Promise<PodiumItem[]> {
-        let url = `api/podium/group/allTime?group=${encodeURI(group)}&podiumsize=${podiumSize}`;
-        if (from !== null) {
-            url += `&from=${from.toISOString()}`
-        }
-        return this.getRequest<PodiumItem[]>(url);
     }
 
     activityReport(name: string|null):Promise<ActivityReportItem[]> {

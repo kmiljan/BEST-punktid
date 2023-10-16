@@ -4,34 +4,19 @@ header('Content-Type: text/json; charset=utf-8');
 header('Cache-Control: no-cache, no-store, must-revalidate');
 mb_internal_encoding("UTF-8");
 
-require '../dataFetch/getGroups.php';
+require_once '../dataFetch/getGroups.php';
 require_once('../host/host.php');
 require_once('../util/SQL_session.php');
 require_once '../util/http.php';
 require_once '../util/time.php';
+require_once '../util/referenceData.php';
 
 $referenceData = $_GET['referenceData'] ?? null;
 
-if ($referenceData == null || ReferenceData::fromName($referenceData) == null) {
+$minDate = getDateFromReferenceData($referenceData);
+
+if ($minDate == null) {
     badRequest('Invalid reference data');
-}
-
-$referenceData = ReferenceData::fromName($referenceData);
-$minDate = null;
-
-switch ($referenceData) {
-    case ReferenceData::totalScore:
-        $minDate = getMinStartDate();
-        break;
-    case ReferenceData::totalScoreThisMonth:
-        $minDate = getMonthStartDate();
-        break;
-    case ReferenceData::totalScoreThisSeason:
-        $minDate = getSeasonStartDate();
-        break;
-    default:
-        badRequest("Invalid reference data");
-        break;
 }
 
 $minDate = $minDate->format("Y-m-d H:i:s");

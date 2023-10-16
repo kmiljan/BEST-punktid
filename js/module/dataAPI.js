@@ -41,22 +41,12 @@ export default class DataAPI {
         const url = `/api/podium/personPlacement?personName=${encodeURI(name)}&referenceData=${referenceData}`;
         return this.getRequest(url);
     }
-    allPodium(podiumSize, from) {
-        let url = `api/podium/all?podiumsize=${podiumSize}`;
-        if (from !== null) {
-            url += `&from=${from.toISOString()}`;
-        }
+    allPodium(podiumSize, referenceData) {
+        const url = `/api/podium/all?podiumSize=${podiumSize}&referenceData=${referenceData}`;
         return this.getRequest(url);
     }
     bestInGroups(referenceData) {
         const url = `api/podium/getBestInGroups?referenceData=${referenceData}`;
-        return this.getRequest(url);
-    }
-    groupPodium(group, podiumSize, from) {
-        let url = `api/podium/group/allTime?group=${encodeURI(group)}&podiumsize=${podiumSize}`;
-        if (from !== null) {
-            url += `&from=${from.toISOString()}`;
-        }
         return this.getRequest(url);
     }
     activityReport(name) {
