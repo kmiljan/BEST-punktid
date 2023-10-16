@@ -18,7 +18,6 @@ function SQL_new_session() {
         exit(1);
     }
     return $conn;
-    
 }
 function SQL_close_session($session) {
     $session->close();
