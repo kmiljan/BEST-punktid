@@ -1,4 +1,6 @@
 <?php
+require_once 'utilFunctions.php';
+
 function SQL_new_session() {
     ini_set('mssql.charset', 'UTF-8');
     ini_set('default_charset', 'utf-8');
