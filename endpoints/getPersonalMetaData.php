@@ -18,7 +18,7 @@ $groups = getGroups();
 $apiResponse = array();
 
 foreach ($groups as $group) {
-    $apiResponse[$group->name] = getGroupingMetadata($personName, $group->name);
+    $apiResponse[$group->getNameIdentifier()] = getGroupingMetadata($personName, $group->name);
 }
 
 echo json_encode($apiResponse);

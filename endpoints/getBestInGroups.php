@@ -73,7 +73,7 @@ foreach ($groups as $group) {
         'name' => $result[0][0],
         'score' => intval($result[0][1]),
         'groupName' => $group->name,
-        'groupIdentifier' => str_replace(' ', '-', $group->name)
+        'groupIdentifier' => $group->getNameIdentifier()
     );
 }
 

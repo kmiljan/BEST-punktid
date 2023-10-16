@@ -202,7 +202,7 @@ export default class Displays {
                 this.group=group;
                 this.groupObject=displayInstance.getGroupObject(group);
                 this.parentNode=parentNode;
-                this.id="d_p_groupbreakdown_"+this.group.replace(" ", "_");
+                this.id="d_p_groupbreakdown_"+this.group;
                 this.content={};
                 this.renderIfDataIsEmpty=renderIfDataIsEmpty;
                 this.dataIsEmpty=false;
@@ -708,19 +708,19 @@ export default class Displays {
                     /*colors.a=[];
                     colors.b=[];*/
                     let gradients=[];
-                    for(let group in this.displayInstance.groups) {
-                        const score=Number(this.rawContent[this.displayInstance.groups[group].identifier].totalScore);
+                    for(let group of this.displayInstance.groups) {
+                        const score=Number(this.rawContent[group.identifier].totalScore);
                         if (score>0) {
                             this.legend.push(
                                 {
-                                    title: this.displayInstance.groups[group].properties.name,
-                                    colorClass: "gradient_"+this.displayInstance.groups[group].identifier
+                                    title: group.properties.name,
+                                    colorClass: "gradient_" + group.identifier
                                 }
-                            )
+                            );
                         }
                         series.push(score);
-                        labels.push(this.displayInstance.groups[group].properties.name);
-                        gradients.push(this.displayInstance.groups[group].properties.gradientFile);
+                        labels.push(group.properties.name);
+                        gradients.push(group.properties.gradientFile);
                         /*colors.a.push(this.displayInstance.groups[group].properties.colors[0]);
                         colors.b.push(this.displayInstance.groups[group].properties.colors[1]);*/
 

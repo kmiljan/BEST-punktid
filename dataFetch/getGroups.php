@@ -11,6 +11,10 @@ class Group {
     )
     {
     }
+
+    public function getNameIdentifier(): string {
+        return str_replace(' ', '_', $this->name);
+    }
 }
 
 /**

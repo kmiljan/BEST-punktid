@@ -7,26 +7,50 @@ require_once('../host/host.php');
 require_once('../util/SQL_session.php');
 require_once '../dataFetch/getGroups.php';
 
-$groupColors = [
-    1 => ['#e0002c', '#fd1060'], //Kohalik tase
-    2 => ['#5c3a3a', '#653d4a'], //Projektitiimid
-    3 => ['#0056e0', '#10adfd'], //Meeskonnatöö
-    4 => ['#75ae40', '#c3d8a1'], //FRTG
-    5 => ['#00dae0', '#6ffe7e'], //MTG
-    6 => ['#4f6a91', '#6f889e'], //TTG
-    7 => ['#e0bc00', '#ecd018'], //DMTG
-    8 => ['#e05e00', '#ef8a12'], //RV
-];
-
+$groupProperties = array(
+    1 => array(
+        'colors' => array('#e0002c', '#fd1060'),
+        'gradientFile' => '/resource/dynamic/svg-gradient-2way_hr_local.svg'
+    ), //Kohalik tase
+    2 => array(
+        'colors' => array('#5c3a3a', '#653d4a'),
+        'gradientFile' => '/resource/dynamic/svg-gradient-2way_hr_projects.svg'
+    ), //Projektitiimid
+    3 => array(
+        'colors' => array('#0056e0', '#10adfd'),
+        'gradientFile' => '/resource/dynamic/svg-gradient-2way_hr_teamwork.svg'
+    ), //Meeskonnatöö
+    4 => array(
+        'colors' => array('#75ae40', '#c3d8a1'),
+        'gradientFile' => '/resource/dynamic/svg-gradient-2way_frtg.svg'
+    ), //FRTG
+    5 => array(
+        'colors' => array('#00dae0', '#6ffe7e'),
+        'gradientFile' => '/resource/dynamic/svg-gradient-2way_mtg.svg'
+    ), //MTG
+    6 => array(
+        'colors' => array('#4f6a91', '#6f889e'),
+        'gradientFile' => "/resource/dynamic/svg-gradient-2way_ttg.svg"
+    ), //TTG
+    7 => array(
+        'colors' => array('#e0bc00', '#ecd018'),
+        'gradientFile' => '/resource/dynamic/svg-gradient-2way_prtg.svg'
+    ), //DMTG
+    8 => array(
+        'colors' => array('#e05e00', '#ef8a12'),
+        'gradientFile' => '/resource/dynamic/svg-gradient-2way_rv.svg'
+    ), //RV
+);
 
 $groups = getGroups();
 
-$mapper = function (Group $row) use ($groupColors): array {
+$mapper = function (Group $row) use ($groupProperties): array {
     return [
-        'identifier' => $row->name,
+        'identifier' => $row->getNameIdentifier(),
         'properties' => [
             'name' => $row->name,
-            'colors' => $groupColors[$row->id]
+            'colors' => $groupProperties[$row->id]['colors'],
+            'gradientFile' => $groupProperties[$row->id]['gradientFile']
         ]
     ];
 };

@@ -2,7 +2,8 @@ export interface Group {
     identifier:string,
     properties:{
         name:string,
-        colors:Array<string>
+        colors:Array<string>,
+        gradientFile: string
     }
 }
 /*const groups=[

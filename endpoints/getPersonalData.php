@@ -26,7 +26,9 @@ foreach ($groups as $group) {
     global $privateAreaDatabaseName;
 
     $sql = "
-    SELECT T.nimetus, SUM(Ps.kogus) as kogus, SUM(Ps.punktisumma) as punktisumma
+    SELECT T.nimetus,
+           SUM(Ps.kogus) as kogus,
+           SUM(Ps.punktisumma) as punktisumma
     FROM Punkti_saamine Ps
         LEFT JOIN (
             SELECT PssInner.punkti_saamine_id, MIN(PssInner.toimumise_aeg) as punkti_saamise_aeg
@@ -59,7 +61,7 @@ foreach ($groups as $group) {
 
     $totalScore = array_sum(array_map(fn (array $item) => $item['score'], $breakDown));
 
-    $apiResponse[$group->name] = array(
+    $apiResponse[$group->getNameIdentifier()] = array(
         'totalScore' => $totalScore,
         'breakdown' => $breakDown
     );
