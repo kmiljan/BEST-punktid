@@ -92,7 +92,7 @@ foreach ($podiumResult as $row) {
         'metadata' => array_map(fn(array $row) => array(
             'score' => intval($row[0]),
             'groupName' => $row[1],
-            'groupIdentifier' => str_replace(' ', '-', $row[1])
+            'groupIdentifier' => str_replace(' ', '_', $row[1])
         ), $result)
     );
 }

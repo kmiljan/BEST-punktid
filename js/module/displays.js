@@ -337,7 +337,7 @@ export default class Displays {
                         }
                         for (let j = 0; j < this.displayInstance.groups.length; j++) {
                             const currentIdentifier = this.displayInstance.groups[j].identifier;
-                            const currentPersonMetadata = currentPerson.metadata.find(x => x.groupName === currentIdentifier);
+                            const currentPersonMetadata = currentPerson.metadata.find(x => x.groupIdentifier === currentIdentifier);
                             if (!currentPersonMetadata) {
                                 series[j].data.push(0);
                                 continue;
