@@ -1,25 +1,6 @@
 <?php
 
 
-enum ReferenceData
-{
-    case totalScore;
-    case totalScoreThisSeason;
-    case totalScoreThisMonth;
-
-    public static function fromName(string $name): ReferenceData|null
-    {
-        foreach (self::cases() as $status) {
-            if ($name === $status->name) {
-                return $status;
-            }
-        }
-
-        return null;
-    }
-}
-
-
 //date ( string $format='Y-m-d' ) ->YYYY-MM-DD
 function compareDate(string $earlier, string $later = null)
 {
@@ -101,8 +82,7 @@ function equivalentYear(string $a, string $b)
 
 function getMonthStartDate()
 {
-    return new DateTime('2023-05-01');
-    //TODO: return new DateTime(date('Y-m') . "-01");
+    return new DateTime(date('Y-m') . "-01");
 }
 
 function getYearStartDate()

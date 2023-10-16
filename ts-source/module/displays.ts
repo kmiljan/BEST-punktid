@@ -327,9 +327,6 @@ export default class Displays {
             };
             data():Promise<void>{
                 this.content.list=[];
-                let requests=[];
-                let metadata=[];
-
                 return this.fetcherInstance.bestInGroups(this.referenceData)
                     .then(result => {
                         for (let i = 0; i < result.length; i++) {
@@ -465,6 +462,11 @@ export default class Displays {
                 let podium=[];
                 return this.fetcherInstance.allPodium(7, this.referenceData)
                     .then(data => {
+                        if (!data.some(x => x.score > 0)) {
+                            this.dataIsEmpty = true;
+                            return;
+                        }
+
                         podium = data.map(x => x.name);
                         let series = [];
                         let colors = [];

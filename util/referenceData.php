@@ -11,3 +11,21 @@ function getDateFromReferenceData(string $referenceData): DateTime|null
         default => null,
     };
 }
+
+enum ReferenceData
+{
+    case totalScore;
+    case totalScoreThisSeason;
+    case totalScoreThisMonth;
+
+    public static function fromName(string $name): ReferenceData|null
+    {
+        foreach (self::cases() as $status) {
+            if ($name === $status->name) {
+                return $status;
+            }
+        }
+
+        return null;
+    }
+}
