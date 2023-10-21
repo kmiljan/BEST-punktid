@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../util/time.php';
+
 function getDateFromReferenceData(string $referenceData): DateTime|null
 {
     $referenceData = ReferenceData::fromName($referenceData);

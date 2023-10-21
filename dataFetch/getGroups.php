@@ -1,7 +1,7 @@
 <?php
 
-require_once '../host/host.php';
-require_once '../util/SQL_session.php';
+require_once __DIR__ . '/../host/host.php';
+require_once __DIR__ . '/../util/SQL_session.php';
 
 class Group {
     public function __construct(
