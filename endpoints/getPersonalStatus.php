@@ -4,37 +4,26 @@ header('Content-Type: text/json; charset=utf-8');
 header('Cache-Control: no-cache, no-store, must-revalidate');
 mb_internal_encoding("UTF-8");
 
-require_once('../host/host.php');
-require_once('../util/SQL_session.php');
-require_once '../util/http.php';
+require_once __DIR__ . '/../dataFetch/isPersonInBoard.php';
+require_once __DIR__ . '/../dataFetch/getPersonalStatus.php';
+require_once __DIR__ . '/../util/http.php';
 
-global $privateAreaDatabaseName;
 
 $name = $_GET['personName'] ?? null;
 if ($name == null) {
     badRequest("personName is required");
 }
 
-$conn = SQL_new_session();
-$conn->query("USE `$privateAreaDatabaseName`");
-
-$sql = "
-SELECT Lsl.nimetus FROM Liikmelisus L
-LEFT JOIN Isik I ON L.isik_id = I.isik_id
-LEFT JOIN Liikmelisuse_syndmus Ls ON L.liikmelisus_id = Ls.liikmelisus_id
-LEFT JOIN Liikmelisuse_seisundi_liik Lsl ON Ls.seisund_syndmuse_jarel = Lsl.liikmelisuse_seisundi_liik_kood
-WHERE CONCAT_WS(' ', NULLIF(I.eesnimi, ''), NULLIF(I.perenimi, ''), IF(NULLIF(I.hyydnimi, '') IS NULL, NULL, CONCAT('(', I.hyydnimi, ')'))) = ?
-ORDER BY Ls.toimumise_aeg DESC
-LIMIT 1
-";
-
-$query=$conn->prepare($sql);
-$query->bind_param('s', $name);
-$query->execute();
-$result=$query->get_result()->fetch_all();
-
-if (sizeof($result) == 0) {
-    notFound("person");
+$isPersonInBoard = isPersonInBoard($name);
+if ($isPersonInBoard) {
+    echo json_encode("Juhatuse liige");
+    return;
 }
 
-echo json_encode($result[0][0]);
+$status = getPersonalStatus($name);
+
+if ($status == null) {
+    notFound("status");
+}
+
+echo json_encode($status->name);
