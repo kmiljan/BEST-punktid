@@ -1,111 +1,84 @@
-import notify from '../module/debug.js';
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 export default class DataAPI {
-    constructor() { }
-    ;
-    requestMethod(URL) {
-        return fetch(URL, {}).then(res => {
-            if (res.ok) {
-                return res.text();
-            }
-        }).then(str => {
-            return new Promise((resolve, reject) => {
-                let data;
-                try {
-                    data = JSON.parse(str);
-                    resolve(data);
-                }
-                catch (e) {
-                    debugger;
-                    notify("Request to URL: " + URL + " came back with \n" + str, "request");
-                    reject(e);
-                }
-            });
-        });
+    constructor() {
+        this.cache = {};
     }
     ;
-    requestMethodText(URL) {
-        return fetch(URL, {}).then(res => {
-            if (res.ok) {
-                return res.text();
-            }
+    getRequest(pathWithQuery) {
+        const url = new URL(pathWithQuery, window.location.origin);
+        return fetch(url, {})
+            .then(res => {
+            return res.json();
+        })
+            .catch(reason => {
+            console.error(`request to url ${pathWithQuery} failed. Reason: ${reason}`);
+            throw "failed request";
+        });
+    }
+    requestMethodText(pathWithQuery) {
+        const url = new URL(pathWithQuery, window.location.origin);
+        return fetch(url, {})
+            .then(res => {
+            return res.text();
+        })
+            .catch(reason => {
+            console.error(`request to url ${pathWithQuery} failed. Reason: ${reason}`);
+            throw "failed request";
         });
     }
     ;
     groups() {
-        return this.requestMethod(`/get_data.php?type=groups`);
+        return this.getRequest('/api/groups');
     }
-    ;
-    names() {
-        return this.requestMethod(`/cache/namelist.json`).then(arr => {
-            for (let i = 0; i < arr.length; i++) {
-                arr[i] = decodeURIComponent(arr[i]);
+    personalData(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const cached = this.cache[`personalData-${name}`];
+            if (cached) {
+                return cached;
             }
-            return arr;
+            const response = yield this.getRequest(`/api/personalData?personName=${encodeURI(name)}`);
+            this.cache[`personalData-${name}`] = response;
+            return response;
         });
     }
-    ;
-    personalData(name) {
-        name = encodeURI(name);
-        return this.requestMethod(`/get_data.php?type=personaldata&person_name=${name}`);
-    }
-    ;
     personalStatus(name) {
-        name = encodeURI(name);
-        return this.requestMethod(`/get_data.php?type=personalstatus&person_name=${name}`);
+        return this.getRequest(`/api/personalStatus?personName=${encodeURI(name)}`);
     }
-    ;
     personalMetadata(name) {
         name = encodeURI(name);
-        return this.requestMethod(`/get_data.php?type=personalmetadata&person_name=${name}`);
+        return this.getRequest(`/api/personalMetadata?personName=${name}`);
     }
-    ;
-    groupMetaData() {
-        return this.requestMethod(`/get_data.php?type=groupmetadata`);
+    placement(name, referenceData) {
+        const url = `/api/podium/personPlacement?personName=${encodeURI(name)}&referenceData=${referenceData}`;
+        return this.getRequest(url);
     }
-    ;
-    placement(group, name, exemptBasedOnStatus, referenceData) {
-        name = encodeURI(name);
-        referenceData = encodeURI(referenceData);
-        group = encodeURI(group);
-        const exemptBasedOnStatusString = encodeURI(String(exemptBasedOnStatus));
-        return this.requestMethod(`/get_data.php?type=podium&person_name=${name}&exemptBasedOnStatus=${exemptBasedOnStatusString}&referencedata=${referenceData}&group=${group}`);
+    allPodium(podiumSize, referenceData) {
+        const url = `/api/podium/all?podiumSize=${podiumSize}&referenceData=${referenceData}`;
+        return this.getRequest(url);
     }
-    ;
-    podium(group, referenceData, podiumSize, exemptBasedOnStatus) {
-        group = encodeURI(group);
-        referenceData = encodeURI(referenceData);
-        const podiumSizeString = encodeURI(String(podiumSize));
-        const exemptBasedOnStatusString = encodeURI(String(exemptBasedOnStatus));
-        return this.requestMethod(`/get_data.php?type=podium&group=${group}&referencedata=${referenceData}&podiumsize=${podiumSizeString}&exemptBasedOnStatus=${exemptBasedOnStatusString}`);
+    bestInGroups(referenceData) {
+        const url = `api/podium/getBestInGroups?referenceData=${referenceData}`;
+        return this.getRequest(url);
     }
-    ;
-    activityReport(name, group) {
-        group = encodeURI(group);
+    activityReport(name) {
+        let url = `/api/activityReport`;
         if (name) {
-            name = encodeURI(name);
-            return this.requestMethod(`/get_data.php?type=activityreport&person_name=${name}&group=${group}`);
+            url += `?personName=${encodeURI(name)}`;
         }
-        return this.requestMethod(`/get_data.php?type=activityreport&group=${group}`);
+        return this.getRequest(url);
     }
-    ;
-    exempt(name) {
-        name = encodeURI(name);
-        return this.requestMethod(`/get_data.php?type=exempt&person_name=${name}`);
+    lastActivities(name, amount) {
+        return this.getRequest(`/api/lastActivities?personName=${encodeURI(name)}&count=${amount}`);
     }
-    ;
-    lastActivities(name, group, amount) {
-        group = encodeURI(group);
-        const amountString = encodeURI(String(amount));
-        if (name) {
-            name = encodeURI(name);
-            return this.requestMethod(`/get_data.php?type=lastactivities&person_name=${name}&group=${group}&amount=${amountString}`);
-        }
-        else {
-            return this.requestMethod(`/get_data.php?type=lastactivities&group=${group}&amount=${amountString}`);
-        }
-    }
-    ;
-    svg(URL) {
-        return this.requestMethodText(`/resource/${URL}`);
+    svg(fileName) {
+        return this.requestMethodText(`/resource/${fileName}`);
     }
 }

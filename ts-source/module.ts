@@ -1,4 +1,3 @@
-import notify from './module/debug.js';
 import DataAPI from './module/dataAPI.js';
 import Renderables from './module/render.js';
 import Displays from './module/displays.js';
@@ -31,9 +30,6 @@ async function personalDisplays(name:string) {
 
     const frame_warning=new renderables.frames.WideFrame(renderables, 'frame_warning', document.getElementById('screenWrapper'), []);
     await frame_warning.create();
-    let warning=new displays.ExemptionWarning(renderables, dataAPI, displays,  name, frame_warning.elementNode);
-    await warning.run();
-    
     const frame_dash=new renderables.frames.DashboardFrame(renderables, 'frame_dash', document.getElementById('screenWrapper'), []);
     await frame_dash.create();
     let personalPointsTotal=new displays.personalPointsTotal(renderables, dataAPI, displays,  name, frame_dash.elementNode);
@@ -47,15 +43,10 @@ async function personalDisplays(name:string) {
     let personalGroupContributions=new displays.personalGroupContributions(renderables, dataAPI, displays,  name, false, frame_dash.elementNode);
     await personalGroupContributions.run();
 
-    let groupdatabreakdowns=[];
-    displays.groups.forEach(
-        (group)=>{
-            const dp_obj=new displays.personalGroupBreakdown(renderables, dataAPI, displays,  name, group.identifier, false, frame_dash.elementNode);
-            dp_obj.run();
-            groupdatabreakdowns.push=dp_obj;
-            
-        }
-    )
+    for (const group of displays.groups) {
+        const dp_obj=new displays.personalGroupBreakdown(renderables, dataAPI, displays,  name, group.identifier, false, frame_dash.elementNode);
+        await dp_obj.run();
+    }
 
     const frame_bottom=new renderables.frames.DashboardFrameWide(renderables, 'frame_bottom', document.getElementById('screenWrapper'), []);
     await frame_bottom.create();
@@ -68,7 +59,6 @@ async function OverallStatisticsDisplays() {
     await frame_input.create();
     let input=new displays.NameInput(renderables, dataAPI, displays, frame_input.elementNode);
     await input.run();
-
 
     const frame_dash=new renderables.frames.DashboardFrame(renderables, 'frame_dash', document.getElementById('screenWrapper'), []);
     await frame_dash.create();

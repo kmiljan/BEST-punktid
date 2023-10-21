@@ -307,7 +307,7 @@ var optionsCircle = {
                 background: '#40475D',
                 strokeWidth: '10%',
                 opacity: 1,
-                margin: 3,
+                margin: 3, // margin is in pixels
             },
         },
     },

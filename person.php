@@ -15,7 +15,7 @@
     <?php
         
         if(!empty($_GET['name'])) {
-            $name=$_GET['name'];
+            $name= htmlspecialchars($_GET['name']);
         }
         else{
             //redirect

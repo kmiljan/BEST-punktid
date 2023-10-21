@@ -35,8 +35,6 @@ function personalDisplays(name) {
         yield splash.run();
         const frame_warning = new renderables.frames.WideFrame(renderables, 'frame_warning', document.getElementById('screenWrapper'), []);
         yield frame_warning.create();
-        let warning = new displays.ExemptionWarning(renderables, dataAPI, displays, name, frame_warning.elementNode);
-        yield warning.run();
         const frame_dash = new renderables.frames.DashboardFrame(renderables, 'frame_dash', document.getElementById('screenWrapper'), []);
         yield frame_dash.create();
         let personalPointsTotal = new displays.personalPointsTotal(renderables, dataAPI, displays, name, frame_dash.elementNode);
@@ -49,12 +47,10 @@ function personalDisplays(name) {
         yield personalPointsMonth.run();
         let personalGroupContributions = new displays.personalGroupContributions(renderables, dataAPI, displays, name, false, frame_dash.elementNode);
         yield personalGroupContributions.run();
-        let groupdatabreakdowns = [];
-        displays.groups.forEach((group) => {
+        for (const group of displays.groups) {
             const dp_obj = new displays.personalGroupBreakdown(renderables, dataAPI, displays, name, group.identifier, false, frame_dash.elementNode);
-            dp_obj.run();
-            groupdatabreakdowns.push = dp_obj;
-        });
+            yield dp_obj.run();
+        }
         const frame_bottom = new renderables.frames.DashboardFrameWide(renderables, 'frame_bottom', document.getElementById('screenWrapper'), []);
         yield frame_bottom.create();
         let activityGraph = new displays.ActivityChart(renderables, dataAPI, displays, name, 'all', true, frame_bottom.elementNode);

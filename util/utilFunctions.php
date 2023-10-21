@@ -1,4 +1,9 @@
 <?php
+
+$PUBLIC_PATH = dirname(__DIR__);
+
+$error_log_path = $PUBLIC_PATH . "/log/error.log";
+
 function val_round($number) {
     return round($number, 2, PHP_ROUND_HALF_UP);
 }

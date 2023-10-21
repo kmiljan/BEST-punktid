@@ -1,22 +1,35 @@
 <?php
+require_once 'utilFunctions.php';
+
+$current_sql_session = null;
+
 function SQL_new_session() {
+    global $current_sql_session;
+    if ($current_sql_session != null)
+        return $current_sql_session;
+
+
     ini_set('mssql.charset', 'UTF-8');
     ini_set('default_charset', 'utf-8');
     global $servername;
     global $username;
     global $password;
+    global $databasePort;
 
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
     try{
-        $conn= new mysqli($servername, $username, $password);
+        $conn= new mysqli($servername, $username, $password, null, $databasePort);
         //$conn->set_charset ("utf8mb4");
         $conn->query("SET NAMES 'utf8mb4'");
     }
     catch(Exception $err){
         logError("SQL(".__FILE__.", Session estabilishment and configuration):\n" .$err->getMessage());
+        exit(1);
     }
+
+    $current_sql_session = $conn;
+
     return $conn;
-    
 }
 function SQL_close_session($session) {
     $session->close();

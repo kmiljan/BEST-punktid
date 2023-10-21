@@ -1,14 +1,5 @@
 import { round, truncate } from './round.js';
-/*const groups=[
-    {identifier:'TTG', properties: {name: 'TTG', colors: ["blue", "lightblue"]}},
-    {identifier:'MTG', properties: {name: 'MTG', colors: ["blue", "lightblue"]}},
-    {identifier:'PRTG', properties: {name: 'DMTG', colors: ["#e0bc00", "#fdde10"]}},
-    {identifier:'FRTG', properties: {name: 'FRTG', colors: ["75ae40", "#c3d8a1"]}},
-    {identifier:'RV', properties: {name: 'RV', colors: ["blue", "lightblue"]}},
-    {identifier:'HR_local', properties: {name: 'LBG Tallinn', colors: ["blue", "lightblue"]}},
-    {identifier:'HR_teamwork', properties: {name: 'Tiimitöö', colors: ["blue", "lightblue"]}},
-    {identifier:'HR_projects', properties: {name: 'Projektid', colors: ["blue", "lightblue"]}},
-];*/
+import { ReferenceData } from "../types.js";
 export default class Displays {
     constructor() {
         //this.personalPointsTotal=personalPointsTotal;
@@ -19,8 +10,9 @@ export default class Displays {
             }
             ;
             data() {
-                return this.fetcherInstance.placement('all', this.name, false, 'totalScore').then(data => {
-                    this.rawContent = data[0];
+                return this.fetcherInstance.placement(this.name, ReferenceData.totalScore)
+                    .then(result => {
+                    this.rawContent = result;
                 });
             }
             ;
@@ -49,10 +41,12 @@ export default class Displays {
             }
             ;
             data() {
-                return this.fetcherInstance.placement('all', this.name, false, 'totalScoreThisSeason').then(data => {
-                    this.rawContent = data[0];
+                return this.fetcherInstance.placement(this.name, ReferenceData.totalScoreThisSeason)
+                    .then(result => {
+                    this.rawContent = result;
                 });
             }
+            ;
             run() {
                 return this.data().then(() => {
                     this.content = {};
@@ -82,48 +76,18 @@ export default class Displays {
             }
             ;
             data() {
-                return this.fetcherInstance.names().then(data => {
-                    this.content.list = data;
-                });
+                return new Promise((resolve, reject) => resolve());
             }
             ;
             navigateToPersonalPage() {
                 const name = document.getElementById("nameInput_content_input").value;
-                window.location.href = '/bestikas/' + encodeURIComponent(name);
+                window.location.href = '/bestikas/' + encodeURIComponent(name.trim()).replace(/%20/g, '+');
             }
             create() {
                 this.renderables = {
                     frame: new this.rendererInstance.frames.InputFrame(this.rendererInstance, this.id + "_f", this.parentNode, [])
                 };
                 this.renderables.frame.create();
-                /*//Create title
-                this.renderables.header=new this.rendererInstance.elements.ElementTitle(
-                    this.rendererInstance,
-                    this.id+"_title",
-                    this.renderables.frame.frameNode,
-                    []
-                );
-                this.renderables.header.data(this.groupObject.properties.name, "Töögrupi ülevaade");
-                this.renderables.header.create();
-    
-                //Create total
-                this.renderables.total=new this.rendererInstance.elements.Value(
-                    this.rendererInstance,
-                    this.id+"_total",
-                    this.renderables.frame.frameNode,
-                    ["colored-text_"+this.groupObject.identifier]
-                );
-                this.renderables.total.data(this.content.totalScore);
-                this.renderables.total.create();
-    
-                //Create stripe
-                this.renderables.stripe=new this.rendererInstance.elements.Stripe(
-                    this.rendererInstance,
-                    this.id+"_stripe",
-                    this.renderables.frame.frameNode,
-                    ["gradient_"+this.groupObject.identifier]
-                );
-                this.renderables.stripe.create();*/
                 //Create element
                 this.renderables.element = new this.rendererInstance.elements.AutocompleteInput(this.rendererInstance, this.id + "_content", this.renderables.frame.frameNode, []);
                 this.renderables.element.data(this.content.list, this.navigateToPersonalPage);
@@ -147,10 +111,12 @@ export default class Displays {
             }
             ;
             data() {
-                return this.fetcherInstance.placement('all', this.name, false, 'totalScoreThisMonth').then(data => {
-                    this.rawContent = data[0];
+                return this.fetcherInstance.placement(this.name, ReferenceData.totalScoreThisMonth)
+                    .then(result => {
+                    this.rawContent = result;
                 });
             }
+            ;
             run() {
                 return this.data().then(() => {
                     this.content = {};
@@ -185,7 +151,8 @@ export default class Displays {
             }
             ;
             data() {
-                return this.fetcherInstance.personalData(this.name).then(data => {
+                return this.fetcherInstance.personalData(this.name)
+                    .then(data => {
                     this.rawContent = data;
                     this.content.list = [];
                     if (this.rawContent[this.group].breakdown.length == 0) {
@@ -202,7 +169,6 @@ export default class Displays {
                     this.content.total = this.rawContent[this.group].totalScore;
                 });
             }
-            ;
             create() {
                 this.renderables = {
                     frame: new this.rendererInstance.frames.DashboardElementFrame(this.rendererInstance, this.id + "_f", this.parentNode, [])
@@ -254,26 +220,23 @@ export default class Displays {
             ;
             data() {
                 this.content.list = [];
-                let requests = [];
-                let metadata = [];
-                this.displayInstance.groups.forEach((group) => {
-                    metadata.push({ name: group.properties.name, identifier: group.identifier });
-                    requests.push(this.fetcherInstance.podium(group.identifier, this.referenceData, 1, this.exemptBasedOnStatus));
-                });
-                return Promise.all(requests).then((data) => {
-                    data.forEach((groupLeaderList, index) => {
-                        if (groupLeaderList[0].score > 0) {
-                            this.dataIsEmpty = false;
-                            this.content.list.push({
-                                group: metadata[index].name,
-                                name: groupLeaderList[0].name,
-                                value: groupLeaderList[0].score,
-                                classes: [
-                                    "color-vars_" + metadata[index].identifier
-                                ]
-                            });
+                return this.fetcherInstance.bestInGroups(this.referenceData)
+                    .then(result => {
+                    for (let i = 0; i < result.length; i++) {
+                        const item = result[i];
+                        if (item.score <= 0) {
+                            continue;
                         }
-                    });
+                        this.dataIsEmpty = false;
+                        this.content.list.push({
+                            group: item.groupName,
+                            name: item.name,
+                            value: item.score,
+                            classes: [
+                                "color-vars_" + item.groupIdentifier
+                            ]
+                        });
+                    }
                 });
             }
             ;
@@ -340,7 +303,7 @@ export default class Displays {
                 this.renderIfDataIsEmpty = renderIfDataIsEmpty;
                 this.dataIsEmpty = false;
                 this.id = "d_p_periodleaders_month";
-                this.referenceData = "totalScoreThisMonth";
+                this.referenceData = ReferenceData.totalScoreThisMonth;
                 this.title = "Käesolev kuu";
                 this.subtitle = "Koondpunktid";
                 this.exemptBasedOnStatus = true;
@@ -350,14 +313,13 @@ export default class Displays {
             data() {
                 this.content.list = [];
                 let podium = [];
-                let personalRequests = [];
-                return this.fetcherInstance.podium('all', this.referenceData, 7, this.exemptBasedOnStatus).then((data) => {
-                    for (let i = 0; i < data.length; i++) {
-                        podium.push(data[i].name);
-                        personalRequests.push(this.fetcherInstance.personalMetadata(data[i].name));
+                return this.fetcherInstance.allPodium(7, this.referenceData)
+                    .then(data => {
+                    if (!data.some(x => x.score > 0)) {
+                        this.dataIsEmpty = true;
+                        return;
                     }
-                    return Promise.all(personalRequests);
-                }).then((personalGroupBreakdownList) => {
+                    podium = data.map(x => x.name);
                     let series = [];
                     let colors = [];
                     for (let j = 0; j < this.displayInstance.groups.length; j++) {
@@ -367,27 +329,25 @@ export default class Displays {
                         };
                         colors.push(this.displayInstance.groups[j].properties.colors[1]);
                     }
-                    for (let i = 0; i < personalGroupBreakdownList.length; i++) {
-                        if (this.displayInstance.groups.reduce((total, group) => {
-                            return total + personalGroupBreakdownList[i][group.identifier][this.referenceData];
-                        }, 0)
-                            <= 0) {
-                            if (i == 0) {
-                                this.dataIsEmpty = true;
-                            }
+                    for (let i = 0; i < data.length; i++) {
+                        const currentPerson = data[i];
+                        if (0 >= currentPerson.metadata.reduce((total, item) => total + item.score)) {
+                            this.dataIsEmpty = true;
                             break;
                         }
                         for (let j = 0; j < this.displayInstance.groups.length; j++) {
-                            series[j].data.push(personalGroupBreakdownList[i][this.displayInstance.groups[j].identifier][this.referenceData]);
+                            const currentIdentifier = this.displayInstance.groups[j].identifier;
+                            const currentPersonMetadata = currentPerson.metadata.find(x => x.groupIdentifier === currentIdentifier);
+                            if (!currentPersonMetadata) {
+                                series[j].data.push(0);
+                                continue;
+                            }
+                            series[j].data.push(currentPersonMetadata.score);
                         }
                     }
                     this.content.series = series;
                     this.content.categories = podium;
                     this.content.colors = colors;
-                    //If the first place has no points, it must be because no-one has points this <period>
-                    /*if(series[0].data.reduce((total, groupPoints)=>{return total+=groupPoints}, 0)<=0) {
-                        this.dataIsEmpty=true;
-                    }*/
                 });
             }
             ;
@@ -437,7 +397,7 @@ export default class Displays {
             constructor(rendererInstance, fetcherInstance, displayInstance, renderIfDataIsEmpty, parentNode) {
                 super(rendererInstance, fetcherInstance, displayInstance, renderIfDataIsEmpty, parentNode);
                 this.id = "d_p_periodleaders_alltime";
-                this.referenceData = "totalScore";
+                this.referenceData = ReferenceData.totalScore;
                 this.title = "Läbi aegade";
                 this.subtitle = "Koondpunktid";
                 this.exemptBasedOnStatus = false;
@@ -459,7 +419,7 @@ export default class Displays {
             }
             ;
             data() {
-                return this.fetcherInstance.lastActivities(this.name, 'all', 5).then(data => {
+                return this.fetcherInstance.lastActivities(this.name, 5).then(data => {
                     this.rawContent = data;
                     this.content.list = [];
                     if (this.rawContent.length == 0) {
@@ -474,7 +434,6 @@ export default class Displays {
                     });
                 });
             }
-            ;
             create() {
                 this.renderables = {
                     frame: new this.rendererInstance.frames.DashboardElementFrame(this.rendererInstance, this.id + "_f", this.parentNode, [])
@@ -528,17 +487,17 @@ export default class Displays {
                     /*colors.a=[];
                     colors.b=[];*/
                     let gradients = [];
-                    for (let group in this.displayInstance.groups) {
-                        const score = Number(this.rawContent[this.displayInstance.groups[group].identifier].totalScore);
+                    for (let group of this.displayInstance.groups) {
+                        const score = Number(this.rawContent[group.identifier].totalScore);
                         if (score > 0) {
                             this.legend.push({
-                                title: this.displayInstance.groups[group].properties.name,
-                                colorClass: "gradient_" + this.displayInstance.groups[group].identifier
+                                title: group.properties.name,
+                                colorClass: "gradient_" + group.identifier
                             });
                         }
                         series.push(score);
-                        labels.push(this.displayInstance.groups[group].properties.name);
-                        gradients.push(this.displayInstance.groups[group].properties.gradientFile);
+                        labels.push(group.properties.name);
+                        gradients.push(group.properties.gradientFile);
                         /*colors.a.push(this.displayInstance.groups[group].properties.colors[0]);
                         colors.b.push(this.displayInstance.groups[group].properties.colors[1]);*/
                     }
@@ -609,7 +568,8 @@ export default class Displays {
             }
             ;
             data() {
-                return this.fetcherInstance.activityReport(this.name, this.group).then(data => {
+                return this.fetcherInstance.activityReport(this.name)
+                    .then(data => {
                     this.rawContent = data;
                     //series1: [value, value]
                     //series2: [value, value]
@@ -624,7 +584,7 @@ export default class Displays {
                         data: []
                     };
                     this.content.categories = [];
-                    for (let i = this.rawContent.length - 1; i > 0; i--) {
+                    for (let i = 0; i < this.rawContent.length; i++) {
                         series1.data.push(truncate(this.rawContent[i].score));
                         series2.data.push(truncate(this.rawContent[i].activities));
                         this.content.categories.push(String(this.rawContent[i].m) + " " + String(this.rawContent[i].y));
@@ -683,41 +643,6 @@ export default class Displays {
                 });
             }
         };
-        this.ExemptionWarning = class {
-            constructor(rendererInstance, fetcherInstance, displayInstance, name, parentNode) {
-                this.rendererInstance = rendererInstance;
-                this.fetcherInstance = fetcherInstance;
-                this.displayInstance = displayInstance;
-                this.name = name;
-                this.parentNode = parentNode;
-                this.id = "d_p_exemptionwarning";
-                this.content = {};
-            }
-            ;
-            data() {
-                return this.fetcherInstance.exempt(this.name).then(data => {
-                    this.content.value = data.value;
-                });
-            }
-            ;
-            create() {
-                if (this.content.value === true || this.content.value === 'true') {
-                    this.renderables = {
-                        frame: new this.rendererInstance.frames.WarningFrame(this.rendererInstance, this.id + "_f", this.parentNode, [])
-                    };
-                    this.renderables.frame.create();
-                    //Create element
-                    this.renderables.header = new this.rendererInstance.elements.Warning(this.rendererInstance, this.id + "_title", this.renderables.frame.frameNode, []);
-                    this.renderables.header.data("Sinu staatuse tõttu ei arvestata sinu punkte jooksvates punktitabelites");
-                    this.renderables.header.create();
-                }
-            }
-            run() {
-                return this.data().then(() => {
-                    this.create();
-                });
-            }
-        };
         this.ActivityChartOverall = class extends this.ActivityChart {
             constructor(rendererInstance, fetcherInstance, displayInstance, renderIfDataIsEmpty, parentNode) {
                 super(rendererInstance, fetcherInstance, displayInstance, null, 'all', renderIfDataIsEmpty, parentNode);
@@ -743,12 +668,13 @@ export default class Displays {
                     person_score: 14000,
                     icon: undefined
                 };
-                return this.fetcherInstance.podium('all', 'totalScore', 1, false).then(data => {
+                return this.fetcherInstance.allPodium(1, ReferenceData.totalScore)
+                    .then(data => {
                     this.content.top_score = data[0].score;
                 }).then(() => {
-                    return this.fetcherInstance.placement('all', this.name, false, 'totalScore');
+                    return this.fetcherInstance.placement(this.name, ReferenceData.totalScore);
                 }).then(data => {
-                    this.content.person_score = data[0].score;
+                    this.content.person_score = data.score;
                     //Calculate result
                     /*this is the first "actual" arithmetic I've done on this front-end, where
                     I've already written about a thousand lines.
@@ -756,9 +682,9 @@ export default class Displays {
                     this.content.placement = this.content.person_score / this.content.top_score;
                 }).then(() => {
                     return this.fetcherInstance.personalStatus(this.name);
-                }).then(data => {
-                    if (data.status != undefined) {
-                        this.content.status = data.status;
+                }).then(status => {
+                    if (status) {
+                        this.content.status = status;
                     }
                 }).then(() => {
                     return this.fetcherInstance.svg('best_icon_filtered.svg');
@@ -773,48 +699,6 @@ export default class Displays {
                 };
                 this.renderables.element.data(this.name, this.content.status, this.content.placement, this.content.icon);
                 this.renderables.element.create();
-                /*
-                            //Create title
-                            this.renderables.header=new this.rendererInstance.elements.ElementTitle(
-                                this.rendererInstance,
-                                this.id+"_title",
-                                this.renderables.frame.frameNode,
-                                []
-                            );
-                            this.renderables.header.data(this.groupObject.properties.name, "Töögrupi ülevaade");
-                            this.renderables.header.create();
-                
-                            //Create total
-                            this.renderables.total=new this.rendererInstance.elements.Value(
-                                this.rendererInstance,
-                                this.id+"_total",
-                                this.renderables.frame.frameNode,
-                                ["colored-text_"+this.groupObject.identifier]
-                            );
-                            this.renderables.total.data(this.content.totalScore);
-                            this.renderables.total.create();
-                
-                            //Create stripe
-                            this.renderables.stripe=new this.rendererInstance.elements.Stripe(
-                                this.rendererInstance,
-                                this.id+"_stripe",
-                                this.renderables.frame.frameNode,
-                                ["gradient_"+this.groupObject.identifier]
-                            );
-                            this.renderables.stripe.data(this.groupObject.properties.colors);
-                            this.renderables.stripe.create();
-                
-                            //Create element
-                            this.renderables.element=new this.rendererInstance.elements.ActivityList(
-                                this.rendererInstance,
-                                this.id+"_content",
-                                this.renderables.frame.frameNode,
-                                []
-                            );
-                            this.renderables.element.data(this.content.list);
-                            this.renderables.element.create();
-                
-                        */
             }
             run() {
                 return this.data().then(() => {
@@ -830,13 +714,7 @@ export default class Displays {
         this.styleContainer.create();
         this.groups = [];
         return dataAPI.groups().then((data) => {
-            for (const group in data) {
-                this.groups.push({
-                    identifier: group,
-                    properties: data[group]
-                });
-            }
-            ;
+            this.groups = data;
             this.groups.forEach((groupElement) => {
                 //Add all style classes you wish to use, here
                 //gradient_<x>: Simple gradient for the stripe element or any other gradient element
